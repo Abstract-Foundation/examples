@@ -1,15 +1,13 @@
-# Abstract Paymasters Demo
+# Smart Contract Accounts Demo
 
-Build and deploy a [paymaster](https://docs.abs.xyz/how-abstract-works/native-account-abstraction/paymasters)
-smart contract that can sponsor the gas fees of transactions for
-other accounts on Abstract.
+Build and deploy a [smart contract wallet](https://abstract.mintlify.app/how-abstract-works/native-account-abstraction/smart-contract-wallets) that can validate and execute transactions with arbitrary logic on Abstract.
 
 ## Local Development
 
-1. Get a copy of the `paymasters` example directory from the Abstract Examples repository:
+1. Get a copy of the `smart-contract-accounts` example directory from the Abstract Examples repository:
 
    ```bash
-   mkdir -p paymasters && curl -L https://codeload.github.com/Abstract-Foundation/examples/tar.gz/main | tar -xz --strip=2 -C paymasters examples-main/paymasters && cd paymasters
+   mkdir -p smart-contract-accounts && curl -L https://codeload.github.com/Abstract-Foundation/examples/tar.gz/main | tar -xz --strip=2 -C smart-contract-accounts examples-main/smart-contract-accounts && cd smart-contract-accounts
    ```
 
 2. Install dependencies.
@@ -18,11 +16,11 @@ other accounts on Abstract.
    yarn
    ```
 
-3. Use [Hardhat](https://hardhat.org/) to run `yarn compile` and compile the `MyPaymaster` smart contract.
+3. Use [Hardhat](https://hardhat.org/) to run `yarn compile` and compile the `BasicAccount` smart contract.
 
-## Deploy & Use the Paymaster
+## Deploy & Use the Smart Contract Wallet
 
-To demo the code, deploy and submit a gas-sponsored transaction from a wallet:
+To demo the code, deploy and submit a transaction from the smart contract wallet, by:
 
 1. Compiling the contracts.
 
@@ -39,7 +37,7 @@ To demo the code, deploy and submit a gas-sponsored transaction from a wallet:
    npx hardhat vars set WALLET_PRIVATE_KEY
    ```
 
-3. Deploy the `MyPaymaster` contract.
+3. Deploy the `BasicAccount` contract.
 
    The `defaultNetwork` inside [hardhat.config.ts](./hardhat.config.ts) is set to `abstractTestnet`. You will need [testnet ETH from a faucet](https://docs.abs.xyz/ecosystem/faucets) in your wallet to deploy the contract to Abstract.
 
@@ -47,7 +45,7 @@ To demo the code, deploy and submit a gas-sponsored transaction from a wallet:
    yarn deploy
    ```
 
-4. Take the outputted `Contract address` and paste it on line `11` of the [interact.ts](./deploy/interact.ts) file:
+4. Take the outputted `Contract address` and paste it on line `9` of the [interact.ts](./deploy/interact.ts) file:
 
    ```typescript
    const CONTRACT_ADDRESS = "<your-deployed-contract-address-here>";
@@ -59,7 +57,7 @@ To demo the code, deploy and submit a gas-sponsored transaction from a wallet:
    yarn interact
    ```
 
-   This will submit a transaction to the network that your paymaster will sponsor the gas fees for.
+   This will submit a transaction that originates from your deployed smart contract account.
 
 ## Using a local node with Docker
 

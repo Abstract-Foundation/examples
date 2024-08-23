@@ -8,7 +8,7 @@ import {
 
 // Address of the contract to interact with
 
-const CONTRACT_ADDRESS = "0x92B4D2E818C52204811d3A4BD062163903bdEC99";
+const CONTRACT_ADDRESS = "";
 if (!CONTRACT_ADDRESS)
   throw `⛔️ Provide the address of the contract to interact with.
   You must set the CONTRACT_ADDRESS variable in the interact.ts file to the address of your deployed paymaster contract.`;
