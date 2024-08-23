@@ -85,8 +85,7 @@ To demo the code, deploy and submit a gas-sponsored transaction from a wallet:
 4. Set the hardhat default network to `inMemoryNode` in [hardhat.config.ts](./hardhat.config.ts).
 
    ```typescript
-   - defaultNetwork: "abstractTestnet",
-   + defaultNetwork: "inMemoryNode",
+   defaultNetwork: "inMemoryNode",
    ```
 
 5. Use the `RICH_WALLETS` array available in the [utils.ts](./deploy/utils.ts) file to access accounts loaded with funds on the local node.
