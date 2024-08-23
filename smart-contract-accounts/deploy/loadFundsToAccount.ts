@@ -11,7 +11,7 @@ export default async function (smartAccountAddress: string, amount: bigint) {
       amount,
       to: smartAccountAddress,
     });
-    console.log("Loaded funds to smart account:");
+    console.log("Smart contract has no funds. Loaded funds to cover gas fees.");
     return tx;
   } catch (e) {
     console.error("Error loading funds to smart account:", e);

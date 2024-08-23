@@ -45,7 +45,7 @@ To demo the code, deploy and submit a transaction from the smart contract wallet
    yarn deploy
    ```
 
-4. Take the outputted `Contract address` and paste it on line `9` of the [interact.ts](./deploy/interact.ts) file:
+4. Take the outputted `Contract address` and paste it on line `8` of the [interact.ts](./deploy/interact.ts) file:
 
    ```typescript
    const CONTRACT_ADDRESS = "<your-deployed-contract-address-here>";

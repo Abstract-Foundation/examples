@@ -1,11 +1,11 @@
 import { getProvider, logExplorerUrl } from "./utils";
 import { serializeEip712 } from "zksync-ethers/build/utils";
-import loadFundsToAccount from "./loadFundsToAccount";
 import { L2VoidSigner, Wallet } from "zksync-ethers";
 import { parseEther } from "ethers";
+import loadFundsToAccount from "./loadFundsToAccount";
 
 // Address of the contract to interact with
-const CONTRACT_ADDRESS = "0x94e997E5dc56681FA4722E5364261Dda607b751E";
+const CONTRACT_ADDRESS = "";
 if (!CONTRACT_ADDRESS)
   throw `⛔️ Provide the address of the contract to interact with.
   You must set the CONTRACT_ADDRESS variable in the interact.ts file to the address of your deployed smart contract account.`;
