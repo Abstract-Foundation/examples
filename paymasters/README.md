@@ -6,10 +6,10 @@ other accounts on Abstract.
 
 ## Local Development
 
-1. [Clone](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) this repository.
+1. Get a copy of the `paymasters` example directory from the Abstract Examples repository:
 
    ```bash
-   curl -L https://codeload.github.com/Abstract-Foundation/examples/tar.gz/main | tar -xz --strip=2 examples-main/paymasters
+   mkdir -p paymasters && curl -L https://codeload.github.com/Abstract-Foundation/examples/tar.gz/main | tar -xz --strip=2 -C paymasters examples-main/paymasters && cd paymasters
    ```
 
 2. Install dependencies.
