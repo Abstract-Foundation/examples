@@ -5,9 +5,19 @@
     <p align="center">Cloneable starter templates & example repos to help kickstart your next project on Abstract.
 </div>
 
+<br/>
+
 ## Using Examples
 
-🚧 This repo is a work in progress. Please check back soon. 🚧
+Each directory in this repository is a standalone example that you can clone and use as a starting point for your next project.
+
+Within each directory, you'll find a `README.md` file with instructions on how to clone the example and get started.
+
+| Example Name                                                                                     | Description                                                                                                               |
+| ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| [Paymaster Smart Contract](https://github.com/Abstract-Foundation/examples/tree/main/paymasters) | Build and deploy a paymaster smart contract that can sponsor the gas fees of transactions for other accounts on Abstract. |
+
+<br/>
 
 ## License
 
