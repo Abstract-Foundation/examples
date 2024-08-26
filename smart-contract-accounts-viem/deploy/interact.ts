@@ -9,7 +9,7 @@ import { parseEther } from "viem";
 import { toSmartAccount } from "viem/zksync";
 
 // Address of the contract to interact with
-const CONTRACT_ADDRESS = "0xddd9d07e4b5ac7e21432719130db2507ee737a81";
+const CONTRACT_ADDRESS = "";
 if (!CONTRACT_ADDRESS)
   throw `⛔️ Provide the address of the contract to interact with.
   You must set the CONTRACT_ADDRESS variable in the interact.ts file to the address of your deployed smart contract account.`;
