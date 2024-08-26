@@ -1,15 +1,13 @@
-🚧 This example is a work in progress. Check back soon. 🚧
+# Smart Contract Accounts with Viem
 
-# Smart Contract Accounts Demo
-
-Build and deploy a [smart contract wallet](https://abstract.mintlify.app/how-abstract-works/native-account-abstraction/smart-contract-wallets) that can validate and execute transactions with arbitrary logic on Abstract.
+Build and deploy a [smart contract wallet](https://abstract.mintlify.app/how-abstract-works/native-account-abstraction/smart-contract-wallets) that can validate and execute transactions with arbitrary logic on Abstract using [viem](https://docs.abs.xyz/build-on-abstract/applications/viem).
 
 ## Local Development
 
-1. Get a copy of the `smart-contract-accounts` example directory from the Abstract Examples repository:
+1. Get a copy of the `smart-contract-accounts-viem` example directory from the Abstract Examples repository:
 
    ```bash
-   mkdir -p smart-contract-accounts && curl -L https://codeload.github.com/Abstract-Foundation/examples/tar.gz/main | tar -xz --strip=2 -C smart-contract-accounts examples-main/smart-contract-accounts && cd smart-contract-accounts
+   mkdir -p smart-contract-accounts-viem && curl -L https://codeload.github.com/Abstract-Foundation/examples/tar.gz/main | tar -xz --strip=2 -C smart-contract-accounts-viem examples-main/smart-contract-accounts-viem && cd smart-contract-accounts-viem
    ```
 
 2. Install dependencies.
@@ -47,7 +45,7 @@ To demo the code, deploy and submit a transaction from the smart contract wallet
    yarn deploy
    ```
 
-4. Take the outputted `Contract address` and paste it on line `8` of the [interact.ts](./deploy/interact.ts) file:
+4. Take the outputted `Contract address` and paste it on line `12` of the [interact.ts](./deploy/interact.ts) file:
 
    ```typescript
    const CONTRACT_ADDRESS = "<your-deployed-contract-address-here>";
