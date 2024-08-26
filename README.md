@@ -16,7 +16,9 @@ Within each directory, you'll find a `README.md` file with instructions on how t
 | Example Name                                                                                                | Description                                                                                                               |
 | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | [Paymaster Smart Contract](https://github.com/Abstract-Foundation/examples/tree/main/paymasters)            | Build and deploy a paymaster smart contract that can sponsor the gas fees of transactions for other accounts on Abstract. |
-| [Smart Contract Account](https://github.com/Abstract-Foundation/examples/tree/main/smart-contract-accounts) | Build your own smart contract wallet and submit transactions from it to use Abstract's native account abstraction..       |
+| [Smart Contract Account](https://github.com/Abstract-Foundation/examples/tree/main/smart-contract-accounts) | Build your own smart contract wallet and submit transactions from it to use Abstract's native account abstraction.       |
+| [Smart Contract Account (with Viem)](https://github.com/Abstract-Foundation/examples/tree/main/smart-contract-accounts-viem) | Build your own smart contract wallet and submit transactions from it to use Abstract's native account abstraction using Viem.       |
+
 
 <br/>
 
