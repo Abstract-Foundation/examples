@@ -3,7 +3,6 @@ import { vars } from "hardhat/config";
 import {
   createPublicClient,
   encodeAbiParameters,
-  encodeDeployData,
   formatEther,
   getContract,
   Hex,
@@ -12,7 +11,7 @@ import {
 } from "viem";
 import { abstractTestnet } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
-import { eip712WalletActions } from "viem/zksync";
+import { eip712WalletActions, zksyncInMemoryNode } from "viem/zksync";
 
 import "@matterlabs/hardhat-zksync-node/dist/type-extensions";
 import "@matterlabs/hardhat-zksync-verify/dist/src/type-extensions";
@@ -23,9 +22,24 @@ export const getClient = () => {
   const rpcUrl = hre.network.config.url;
 
   return createPublicClient({
-    chain: abstractTestnet,
     transport: http(rpcUrl),
+    chain: getChain(),
   }).extend(eip712WalletActions());
+};
+
+const getChain = () => {
+  if (hre.network.name === "inMemoryNode") {
+    return zksyncInMemoryNode;
+  }
+
+  if (hre.network.name === "abstractTestnet") {
+    return abstractTestnet;
+  } else {
+    throw `⛔️ Unsupported network: ${hre.network.name}
+    Supported networks are: inMemoryNode, abstractTestnet.
+
+    See the getChain() function in deploy/utils.ts for more details.`;
+  }
 };
 
 export const getAccount = (privateKey?: Hex): PrivateKeyAccount => {
@@ -34,7 +48,11 @@ export const getAccount = (privateKey?: Hex): PrivateKeyAccount => {
     privateKey = hardhatConfigPrivateKey as Hex;
   }
 
-  return privateKeyToAccount(`0x${privateKey}`);
+  if (!privateKey.startsWith("0x")) {
+    privateKey = `0x${privateKey}`;
+  }
+
+  return privateKeyToAccount(`${privateKey}`);
 };
 
 export const verifyEnoughBalance = async (
@@ -74,13 +92,32 @@ export const deployContract = async (
   console.log(`\nStarting deployment process of "${contractArtifactName}"...`);
 
   const client = getClient();
+  const account = getAccount();
 
   const { abi, bytecode, deployedBytecode, contractName, sourceName } =
     hre.artifacts.readArtifactSync(contractArtifactName);
 
+  const accountBalance = await client.getBalance({
+    address: account.address,
+  });
+
+  if (accountBalance == 0n) {
+    if (hre.network.name === "inMemoryNode") {
+      console.log(
+        `⛔️ Wallet balance is 0 ETH.
+        
+        Use a rich wallet from the LOCAL_RICH_WALLETS array in deploy/utils.ts.`
+      );
+    } else {
+      throw `⛔️ Wallet balance is 0 ETH. Fund your wallet using a faucet.
+
+      Learn more: https://docs.abs.xyz/ecosystem/faucets`;
+    }
+  }
+
   const transactionHash = await client.deployContract({
-    account: getAccount(),
-    chain: abstractTestnet,
+    account: account,
+    chain: getChain(),
     abi: abi,
     bytecode: bytecode as Hex,
     args: constructorArguments,
@@ -105,31 +142,30 @@ export const deployContract = async (
     throw `⛔️ Contract deployment failed!`;
   }
 
+  console.log(`✅ Contract address: ${contract.address}`);
+
   // Viem concatenates the contract bytecode onto the ABI encoded data.
   const encodedConstructorArguments = encodeAbiParameters(
     abi.find((item) => item.type === "constructor")?.inputs || [],
     constructorArguments
   );
 
-  console.log(encodedConstructorArguments);
-
-  if (hre.network.verifyURL) {
+  if (hre.network.name === "abstractTestnet" && hre.network.verifyURL) {
     await verifyContract({
       address: contract.address,
       bytecode: deployedBytecode,
       constructorArguments: encodedConstructorArguments,
       contract: `${sourceName}:${contractName}`,
     });
+    logExplorerUrl(contract.address, "address");
   }
-
-  logExplorerUrl(contract.address, "address");
 
   return contract;
 };
 
 /**
  * Rich wallets can be used for testing purposes.
- * Available on zkSync In-memory node and Dockerized node.
+ * Available on the In-memory node and Dockerized node.
  */
 export const LOCAL_RICH_WALLETS = [
   {

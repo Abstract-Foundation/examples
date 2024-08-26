@@ -1,8 +1,9 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@matterlabs/hardhat-zksync";
+import "@nomicfoundation/hardhat-viem";
 
 const config: HardhatUserConfig = {
-  defaultNetwork: "abstractTestnet",
+  defaultNetwork: "inMemoryNode",
   networks: {
     abstractTestnet: {
       url: "https://api.testnet.abs.xyz",
@@ -10,11 +11,6 @@ const config: HardhatUserConfig = {
       zksync: true,
       verifyURL:
         "https://api-explorer-verify.testnet.abs.xyz/contract_verification",
-    },
-    dockerizedNode: {
-      url: "http://localhost:3050",
-      ethNetwork: "http://localhost:8545",
-      zksync: true,
     },
     inMemoryNode: {
       url: "http://127.0.0.1:8011",
