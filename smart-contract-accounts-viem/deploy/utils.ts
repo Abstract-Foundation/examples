@@ -2,6 +2,7 @@ import * as hre from "hardhat";
 import { vars } from "hardhat/config";
 import {
   createPublicClient,
+  createWalletClient,
   encodeAbiParameters,
   formatEther,
   getContract,
@@ -11,14 +12,18 @@ import {
 } from "viem";
 import { abstractTestnet } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
-import { eip712WalletActions, zksyncInMemoryNode } from "viem/zksync";
+import {
+  eip712WalletActions,
+  zksyncInMemoryNode,
+  ZksyncSmartAccount,
+} from "viem/zksync";
 
 import "@matterlabs/hardhat-zksync-node/dist/type-extensions";
 import "@matterlabs/hardhat-zksync-verify/dist/src/type-extensions";
 
 const PRIVATE_KEY_HARDHAT_CONFIGURATION_VARIABLE_NAME = "WALLET_PRIVATE_KEY";
 
-export const getClient = () => {
+export const getPublicClient = () => {
   const rpcUrl = hre.network.config.url;
 
   return createPublicClient({
@@ -27,19 +32,14 @@ export const getClient = () => {
   }).extend(eip712WalletActions());
 };
 
-const getChain = () => {
-  if (hre.network.name === "inMemoryNode") {
-    return zksyncInMemoryNode;
-  }
+export const getWalletClient = (account?: ZksyncSmartAccount) => {
+  const rpcUrl = hre.network.config.url;
 
-  if (hre.network.name === "abstractTestnet") {
-    return abstractTestnet;
-  } else {
-    throw `⛔️ Unsupported network: ${hre.network.name}
-    Supported networks are: inMemoryNode, abstractTestnet.
-
-    See the getChain() function in deploy/utils.ts for more details.`;
-  }
+  return createWalletClient({
+    chain: getChain(),
+    transport: http(rpcUrl),
+    account,
+  }).extend(eip712WalletActions());
 };
 
 export const getAccount = (privateKey?: Hex): PrivateKeyAccount => {
@@ -59,7 +59,7 @@ export const verifyEnoughBalance = async (
   wallet: PrivateKeyAccount,
   amount: bigint
 ) => {
-  const balance = await getClient().getBalance({
+  const balance = await getPublicClient().getBalance({
     address: wallet.address,
   });
 
@@ -91,7 +91,7 @@ export const deployContract = async (
 ) => {
   console.log(`\nStarting deployment process of "${contractArtifactName}"...`);
 
-  const client = getClient();
+  const client = getPublicClient();
   const account = getAccount();
 
   const { abi, bytecode, deployedBytecode, contractName, sourceName } =
@@ -163,6 +163,42 @@ export const deployContract = async (
   return contract;
 };
 
+export const getChain = () => {
+  if (hre.network.name === "inMemoryNode") {
+    return zksyncInMemoryNode;
+  }
+
+  if (hre.network.name === "abstractTestnet") {
+    return abstractTestnet;
+  } else {
+    throw `⛔️ Unsupported network: ${hre.network.name}
+    Supported networks are: inMemoryNode, abstractTestnet.
+
+    See the getChain() function in deploy/utils.ts for more details.`;
+  }
+};
+
+function loadPrivateKeyFromHardhatConfig() {
+  try {
+    return vars.get(PRIVATE_KEY_HARDHAT_CONFIGURATION_VARIABLE_NAME);
+  } catch (error) {
+    throw `⛔️ No Hardhat configuration variable found for WALLET_PRIVATE_KEY.
+    Run npx hardhat vars set WALLET_PRIVATE_KEY
+    and enter a new wallet's private key (do NOT use your mainnet wallet)!`;
+  }
+}
+
+export function logExplorerUrl(address: Hex, type: "address" | "tx") {
+  if (hre.network.name === "abstractTestnet") {
+    const explorerUrl = `https://explorer.testnet.abs.xyz/${type}/${address}`;
+    const prettyType = type === "address" ? "account" : "transaction";
+
+    console.log(
+      `🔗 View your ${prettyType} on the Abstract Explorer: ${explorerUrl}\n`
+    );
+  }
+}
+
 /**
  * Rich wallets can be used for testing purposes.
  * Available on the In-memory node and Dockerized node.
@@ -219,24 +255,3 @@ export const LOCAL_RICH_WALLETS = [
       "0x3eb15da85647edd9a1159a4a13b9e7c56877c4eb33f614546d4db06a51868b1c",
   },
 ];
-
-function loadPrivateKeyFromHardhatConfig() {
-  try {
-    return vars.get(PRIVATE_KEY_HARDHAT_CONFIGURATION_VARIABLE_NAME);
-  } catch (error) {
-    throw `⛔️ No Hardhat configuration variable found for WALLET_PRIVATE_KEY.
-    Run npx hardhat vars set WALLET_PRIVATE_KEY
-    and enter a new wallet's private key (do NOT use your mainnet wallet)!`;
-  }
-}
-
-export function logExplorerUrl(address: Hex, type: "address" | "tx") {
-  if (hre.network.name === "abstractTestnet") {
-    const explorerUrl = `https://explorer.testnet.abs.xyz/${type}/${address}`;
-    const prettyType = type === "address" ? "account" : "transaction";
-
-    console.log(
-      `🔗 View your ${prettyType} on the Abstract Explorer: ${explorerUrl}\n`
-    );
-  }
-}

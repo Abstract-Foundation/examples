@@ -3,7 +3,7 @@ import "@matterlabs/hardhat-zksync";
 import "@nomicfoundation/hardhat-viem";
 
 const config: HardhatUserConfig = {
-  defaultNetwork: "inMemoryNode",
+  defaultNetwork: "abstractTestnet",
   networks: {
     abstractTestnet: {
       url: "https://api.testnet.abs.xyz",

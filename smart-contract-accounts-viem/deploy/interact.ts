@@ -1,11 +1,15 @@
-import { getProvider, logExplorerUrl } from "./utils";
-import { serializeEip712 } from "zksync-ethers/build/utils";
-import { L2VoidSigner, Wallet } from "zksync-ethers";
-import { parseEther } from "ethers";
+import {
+  logExplorerUrl,
+  getChain,
+  getWalletClient,
+  getPublicClient,
+} from "./utils";
 import loadFundsToAccount from "./loadFundsToAccount";
+import { parseEther } from "viem";
+import { toSmartAccount } from "viem/zksync";
 
 // Address of the contract to interact with
-const CONTRACT_ADDRESS = "";
+const CONTRACT_ADDRESS = "0xddd9d07e4b5ac7e21432719130db2507ee737a81";
 if (!CONTRACT_ADDRESS)
   throw `⛔️ Provide the address of the contract to interact with.
   You must set the CONTRACT_ADDRESS variable in the interact.ts file to the address of your deployed smart contract account.`;
@@ -22,37 +26,36 @@ if (!CONTRACT_ADDRESS)
 export default async function () {
   console.log(`Running script to interact with contract ${CONTRACT_ADDRESS}`);
 
-  const provider = getProvider();
+  const account = toSmartAccount({
+    address: CONTRACT_ADDRESS,
+    async sign({ hash }) {
+      // ... signing logic (ours has no validation, so we leave it empty)
+      return hash;
+    },
+  });
 
-  // Create a "VoidSigner" setting the account to connect to as the smart contract account.
-  // We can use a void signer because our contract doesn't verify any signatures.
-  const signer = new L2VoidSigner(CONTRACT_ADDRESS, provider);
-
-  // Get the current nonce of the smart contract account
-  const nonce = await signer.getNonce();
+  const publicClient = getPublicClient();
+  const walletClient = getWalletClient(account);
 
   // Check if the smart contract has any funds to pay for gas fees
-  const balance = await provider.getBalance(CONTRACT_ADDRESS);
+  const balance = await publicClient.getBalance({
+    address: walletClient.account.address,
+  });
 
   // If it does not have any funds, load funds to the contract from your EOA (set as Hardhat private key)
   if (balance == 0n) {
     loadFundsToAccount(CONTRACT_ADDRESS, parseEther("0.001"));
   }
 
-  // Create a transaction object to send "from" the smart smart contract account
-  const transaction = await signer.populateTransaction({
-    nonce: nonce, // You may need to change this if you're sending multiple transactions.
-    to: Wallet.createRandom().address, // As an example, let's send money to another random wallet for our tx.
-    customData: {
-      customSignature: "0x69", // Since our contract does no validation, we can put any hex value here. But it is still required.
-    },
+  const transactionHash = await walletClient.sendTransaction({
+    to: "0x8e729E23CDc8bC21c37a73DA4bA9ebdddA3C8B6d", // Example address to send funds to
+    chainId: getChain().id,
+    data: "0x69",
   });
 
-  // Broadcast the transaction to the network
-  const sentTx = await getProvider().broadcastTransaction(
-    serializeEip712(transaction)
-  );
-  const resp = await sentTx.wait();
+  const resp = await publicClient.waitForTransactionReceipt({
+    hash: transactionHash,
+  });
 
-  logExplorerUrl(resp.hash, "tx");
+  logExplorerUrl(resp.transactionHash, "tx");
 }
