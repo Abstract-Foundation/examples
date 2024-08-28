@@ -6,12 +6,7 @@ import { Provider, types, utils, Wallet } from "zksync-ethers";
 import { Contract, ContractTransactionReceipt, parseEther } from "ethers";
 import { EIP712Signer } from "zksync-ethers/build/signer";
 import { EIP712_TX_TYPE, serializeEip712 } from "zksync-ethers/build/utils";
-import {
-  eip712Domain,
-  eip712Types,
-  NFT_CONTRACT_ABI,
-  NFT_CONTRACT_ADDRESS,
-} from "./utils";
+import { eip712Domain, eip712Types } from "./utils";
 import { TransactionRequest } from "zksync-ethers/build/types";
 
 import "@matterlabs/hardhat-zksync-verify/dist/src/type-extensions";
@@ -115,12 +110,6 @@ export default async function deploy(hre: HardhatRuntimeEnvironment) {
     );
   }
 
-  // const to = NFT_CONTRACT_ADDRESS;
-  // const nftContract = new Contract(to, NFT_CONTRACT_ABI, eoaWallet);
-  // const mintData = nftContract.interface.encodeFunctionData("mint", [
-  //   deployedContractAddress,
-  //   1,
-  // ]);
   const to = "0x8e729E23CDc8bC21c37a73DA4bA9ebdddA3C8B6d";
   const nonce = await provider.getTransactionCount(deployedContractAddress);
   const gasPrice = await provider.getGasPrice();
@@ -196,7 +185,7 @@ const verifyContract = async (data: {
 };
 
 function logExplorerUrl(address: string, type: "address" | "tx") {
-  if (hre.network.name !== "abstractTestnet") {
+  if (hre.network.name === "abstractTestnet") {
     const explorerUrl = `https://explorer.testnet.abs.xyz/${type}/${address}`;
     const prettyType = type === "address" ? "account" : "transaction";
 
