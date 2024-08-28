@@ -8,7 +8,6 @@ import {
   FACTORY_ABI,
   NFT_ABI,
   NFT_ADDRESS,
-  NFT_PAYMASTER_ADDRESS,
   VALIDATOR_ADDRESS,
 } from "@/const/contracts";
 import useWalletClient from "@/lib/useWalletClient";
@@ -21,12 +20,12 @@ import {
   Hex,
   http,
   parseAbiParameters,
+  parseEther,
 } from "viem";
 import Link from "next/link";
 import {
   toSmartAccount,
   eip712WalletActions,
-  getGeneralPaymasterInput,
   serializeTransaction,
 } from "viem/zksync";
 import {
@@ -131,6 +130,13 @@ export default function DeploySmartWalletSection() {
           <Button
             className="w-full max-w-[256px] mt-2"
             onClick={async () => {
+              // First load some funds into the smart contract account
+              walletClient?.sendTransaction({
+                account: address as Hex,
+                to: smartContractAccountAddress,
+                value: parseEther("0.001"),
+              });
+
               const smartAccount = toSmartAccount({
                 address: smartContractAccountAddress, // The address of the deployed smart contract account
                 async sign({ hash }) {
@@ -159,10 +165,6 @@ export default function DeploySmartWalletSection() {
                   account: smartContractAccountAddress as Hex,
                   chain: abstractTestnet,
                   data: mintData,
-                  paymaster: NFT_PAYMASTER_ADDRESS,
-                  paymasterInput: getGeneralPaymasterInput({
-                    innerInput: "0x",
-                  }),
                   to: NFT_ADDRESS,
                   type: "eip712",
                 });
