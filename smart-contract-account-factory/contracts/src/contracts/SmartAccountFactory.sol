@@ -8,6 +8,9 @@ contract SmartAccountFactory {
         address _owner
     ) external returns (address accountAddress) {
         SmartAccount account = new SmartAccount(_owner);
+        emit AccountCreated(address(account), _owner);
         return address(account);
     }
+
+    event AccountCreated(address accountAddress, address owner);
 }
