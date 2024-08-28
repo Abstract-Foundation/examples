@@ -10,10 +10,10 @@ This example consists of two components:
 
 ## Local Development
 
-1. Get a copy of the `smart-contract-accounts-factory` example directory from the Abstract Examples repository:
+1. Get a copy of the `smart-contract-account-factory` example directory from the Abstract Examples repository:
 
    ```bash
-   mkdir -p smart-contract-accounts-factory && curl -L https://codeload.github.com/Abstract-Foundation/examples/tar.gz/main | tar -xz --strip=2 -C smart-contract-accounts-factory examples-main/smart-contract-accounts-factory && cd smart-contract-accounts-factory
+   mkdir -p smart-contract-account-factory && curl -L https://codeload.github.com/Abstract-Foundation/examples/tar.gz/main | tar -xz --strip=2 -C smart-contract-account-factory examples-main/smart-contract-account-factory && cd smart-contract-account-factory
    ```
 
 ### Contract Development
@@ -24,13 +24,19 @@ This example consists of two components:
    cd contracts
    ```
 
-2. Compiling the contracts.
+2. Install dependencies
+
+  ```bash
+  npm install
+  ```
+
+3. Compiling the contracts.
 
    ```bash
    npx hardhat compile
    ```
 
-3. Create a new [Hardhat configuration variable](https://hardhat.org/hardhat-runner/docs/guides/configuration-variables) for your wallet private key.
+4. Create a new [Hardhat configuration variable](https://hardhat.org/hardhat-runner/docs/guides/configuration-variables) for your wallet private key.
 
    When prompted, enter the private key of the wallet you want to use to deploy the contract.
    It is strongly recommended to use a new wallet for this purpose.
@@ -39,7 +45,7 @@ This example consists of two components:
    npx hardhat vars set WALLET_PRIVATE_KEY
    ```
 
-4. Run the [deploy script](./contracts/deploy/deploy.ts) to deploy the smart contract account factory and create a smart account via the factory.
+5. Run the [deploy script](./contracts/deploy/deploy.ts) to deploy the smart contract account factory and create a smart account via the factory.
 
    _Note: The `defaultNetwork` inside [hardhat.config.ts](./contracts/hardhat.config.ts) is set to `abstractTestnet`. You will need [testnet ETH from a faucet](https://docs.abs.xyz/ecosystem/faucets) in your wallet to deploy the contract to Abstract._
 
