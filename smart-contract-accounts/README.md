@@ -1,6 +1,6 @@
 # Smart Contract Accounts Demo
 
-Build and deploy a [smart contract wallet](https://abstract.mintlify.app/how-abstract-works/native-account-abstraction/smart-contract-wallets) that can validate and execute transactions with arbitrary logic on Abstract.
+Build and deploy a [smart contract wallet](https://docs.abs.xyz/how-abstract-works/native-account-abstraction/smart-contract-wallets) that can validate and execute transactions with arbitrary logic on Abstract.
 
 ## Local Development
 

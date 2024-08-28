@@ -1,0 +1,12 @@
+{
+  "name": "smart-contract-account-factory-contracts",
+  "devDependencies": {
+    "@matterlabs/hardhat-zksync": "^1.1.0",
+    "@openzeppelin/contracts": "^4.6.0",
+    "ethers": "^6.13.2",
+    "hardhat": "^2.22.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4",
+    "zksync-ethers": "^6.11.2"
+  }
+}
