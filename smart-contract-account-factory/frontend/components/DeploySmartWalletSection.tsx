@@ -42,6 +42,10 @@ export default function DeploySmartWalletSection() {
   const [smartContractAccountAddress, setSmartContractAccountAddress] =
     useState<Hex | null>(null);
 
+  const [mintTransactionHash, setMintTransactionHash] = useState<string | null>(
+    null
+  );
+
   return (
     <div className="flex flex-col items-center justify-center w-full h-full my-2 pt-6">
       {!address ? null : (
@@ -199,11 +203,35 @@ export default function DeploySmartWalletSection() {
                   serializedTransaction: serializedTx,
                 });
 
-              console.log("Transaction hash: ", transactionHash);
+              const publicClient = createPublicClient({
+                chain: abstractTestnet,
+                transport: http(),
+              });
+
+              await publicClient.waitForTransactionReceipt({
+                hash: transactionHash,
+              });
+
+              setMintTransactionHash(transactionHash);
+
+              alert("NFT minted!");
             }}
           >
             Mint NFT
           </Button>
+
+          {mintTransactionHash && (
+            <p className="mt-2 text-green-500">
+              <Link
+                className="bold underline"
+                href={`https://explorer.testnet.abs.xyz/tx/${mintTransactionHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View transaction on block explorer
+              </Link>
+            </p>
+          )}
         </>
       )}
     </div>
