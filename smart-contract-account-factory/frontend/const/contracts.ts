@@ -5,10 +5,6 @@ export const FACTORY_CONTRACT_ADDRESS =
 // Sample NFT deployed to Abstract Testnet
 export const NFT_ADDRESS = "0xC4822AbB9F05646A9Ce44EFa6dDcda0Bf45595AA";
 
-// Sample paymaster that sponsors NFT mints
-export const NFT_PAYMASTER_ADDRESS =
-  "0x5bf84632aDaFEB17Bd3899767FFeBdbD0d95376a";
-
 export const VALIDATOR_ADDRESS = "0x84d17983DCf2431916e9Bf0574A998a1A35d58f5";
 
 export const NFT_ABI = [
