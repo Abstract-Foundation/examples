@@ -1,204 +1,224 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.0;
 
-import {IAccount, ACCOUNT_VALIDATION_SUCCESS_MAGIC} from "@matterlabs/zksync-contracts/l2/system-contracts/interfaces/IAccount.sol";
-import {TransactionHelper, Transaction} from "@matterlabs/zksync-contracts/l2/system-contracts/libraries/TransactionHelper.sol";
-import {SystemContractsCaller} from "@matterlabs/zksync-contracts/l2/system-contracts/libraries/SystemContractsCaller.sol";
-import {SystemContractHelper} from "@matterlabs/zksync-contracts/l2/system-contracts/libraries/SystemContractHelper.sol";
-import {EfficientCall} from "@matterlabs/zksync-contracts/l2/system-contracts/libraries/EfficientCall.sol";
-import {BOOTLOADER_FORMAL_ADDRESS, NONCE_HOLDER_SYSTEM_CONTRACT, DEPLOYER_SYSTEM_CONTRACT, INonceHolder} from "@matterlabs/zksync-contracts/l2/system-contracts/Constants.sol";
-import {Utils} from "@matterlabs/zksync-contracts/l2/system-contracts/libraries/Utils.sol";
+import "@matterlabs/zksync-contracts/l2/system-contracts/interfaces/IAccount.sol";
+import "@matterlabs/zksync-contracts/l2/system-contracts/libraries/TransactionHelper.sol";
+import "@openzeppelin/contracts/interfaces/IERC1271.sol";
+// Used for signature validation
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+// Access ZKsync system contracts for nonce validation via NONCE_HOLDER_SYSTEM_CONTRACT
+import "@matterlabs/zksync-contracts/l2/system-contracts/Constants.sol";
+// to call non-view function of system contracts
+import "@matterlabs/zksync-contracts/l2/system-contracts/libraries/SystemContractsCaller.sol";
 
-import "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
-
-contract Account is IAccount {
+contract Account is IAccount, IERC1271 {
+    // to get transaction hash
     using TransactionHelper for Transaction;
-    using SignatureChecker for address;
 
-    address public eoaSigner;
+    // state variable for account owner
+    address public owner;
 
-    modifier ignoreNonBootloader() {
-        if (msg.sender != BOOTLOADER_FORMAL_ADDRESS) {
-            assembly {
-                return(0, 0)
-            }
-        }
+    bytes4 constant EIP1271_SUCCESS_RETURN_VALUE = 0x1626ba7e;
+
+    modifier onlyBootloader() {
+        require(
+            msg.sender == BOOTLOADER_FORMAL_ADDRESS,
+            "Only bootloader can call this method"
+        );
+        // Continue execution if called from the bootloader.
         _;
     }
 
-    constructor(address _initialSigner) {
-        eoaSigner = _initialSigner;
+    constructor(address _owner) {
+        owner = _owner;
     }
 
-    /* ********************
-     * IAccount Functions *
-     ******************** */
-
-    // Step 1: Bootloader calls this function to see if the account wants to execute the transaction.
     function validateTransaction(
-        bytes32, // _txHash
+        bytes32,
         bytes32 _suggestedSignedHash,
         Transaction calldata _transaction
-    ) external payable override ignoreNonBootloader returns (bytes4 magic) {
-        magic = _validate(_suggestedSignedHash, _transaction);
+    ) external payable override onlyBootloader returns (bytes4 magic) {
+        return _validateTransaction(_suggestedSignedHash, _transaction);
     }
 
-    // Step 2: If the validation step passed, begin executing the transaction.
-    function executeTransaction(
-        bytes32, // _txHash
-        bytes32, // _suggestedSignedHash
-        Transaction calldata _transaction
-    ) external payable override ignoreNonBootloader {
-        _execute(_transaction);
-    }
-
-    // Step 2 (alternative): Execute a transaction from "outside" the account.
-    // This enables transactions to be executed from the L1 for this account.
-    function executeTransactionFromOutside(
-        Transaction calldata _transaction
-    ) external payable override ignoreNonBootloader {
-        // Since no "suggestedHash", is provided, we pass in 0 and let the function calculate the hash.
-        bytes4 magic = _validate(bytes32(0), _transaction);
-        // Same flow: if validation passed, execute the transaction.
-        if (magic == ACCOUNT_VALIDATION_SUCCESS_MAGIC) {
-            _execute(_transaction);
-        } else {
-            revert("Transaction validation failed");
-        }
-    }
-
-    // Step 3: Pay for the transaction fee.
-    function payForTransaction(
-        bytes32, // _txHash
-        bytes32, // _suggestedSignedHash
-        Transaction calldata _transaction
-    ) external payable ignoreNonBootloader {
-        bool success = _transaction.payToTheBootloader();
-        require(success, "Failed to pay the fee to the operator");
-    }
-
-    // Step 3 (alternative): Pay for the transaction using a paymaster.
-    // This means the paymaster
-    function prepareForPaymaster(
-        bytes32, // _txHash
-        bytes32, // _suggestedSignedHash
-        Transaction calldata _transaction
-    ) external payable ignoreNonBootloader {
-        _transaction.processPaymasterInput();
-    }
-
-    /* ********************
-     * Other Functions *
-     ******************** */
-
-    /**
-     * @dev Validates a signature for a given hash following EIP-1271.
-     * @param _address The address that signed the hash.
-     * @param _hash The hash that was signed.
-     * @param _signature The signature to validate.
-     * @return `true` if the signature is valid, `false` otherwise.
-     * @notice This function uses the `isValidSignatureNow` function from the `SignatureChecker` library.
-     * See https://docs.abs.xyz/how-abstract-works/native-account-abstraction/signature-validation
-     *     For more information on signature validation in Abstract's native account abstraction.
-     */
-    function isValidSignature(
-        address _address,
-        bytes32 _hash,
-        bytes memory _signature
-    ) public view returns (bool) {
-        return _address.isValidSignatureNow(_hash, _signature);
-    }
-
-    /**
-     * @dev Increments the nonce for the smart contract account.
-     * @param nonce The expected current nonce value.
-     * @notice This function makes a system call to the NonceHolder system contract
-     *         to increment the minimum nonce if it equals the provided value.
-     * @custom:context This function is used during transaction validation
-     * See https://docs.abs.xyz/how-abstract-works/native-account-abstraction/handling-nonces
-     *      For more information on nonce handling in Abstract's native account abstraction.
-     */
-    function _incrementNonce(uint256 nonce) internal {
-        // SystemContractsCaller is a library that allows calling contracts with the `isSystem` flag.
-        SystemContractsCaller.systemCallWithPropagatedRevert(
-            uint32(gasleft()), // gasLimit
-            address(NONCE_HOLDER_SYSTEM_CONTRACT), // Call the NonceHolder system contract
-            0, // value
-            // Call the NonceHolder's incrementMinNonceIfEquals function.
-            // -> If the nonce passed in is equal to the current minimum nonce, increment it.
-            // -> Otherwise, revert the transaction.
-            abi.encodeCall(INonceHolder.incrementMinNonceIfEquals, (nonce))
-        );
-    }
-
-    function _validate(
+    function _validateTransaction(
         bytes32 _suggestedSignedHash,
         Transaction calldata _transaction
     ) internal returns (bytes4 magic) {
-        // The nonce must be used up in the validation step.
-        _incrementNonce(_transaction.nonce);
+        // Incrementing the nonce of the account.
+        // Note, that reserved[0] by convention is currently equal to the nonce passed in the transaction
+        SystemContractsCaller.systemCallWithPropagatedRevert(
+            uint32(gasleft()),
+            address(NONCE_HOLDER_SYSTEM_CONTRACT),
+            0,
+            abi.encodeCall(
+                INonceHolder.incrementMinNonceIfEquals,
+                (_transaction.nonce)
+            )
+        );
 
-        // Ensure this account has enough funds to pay for the transaction.
+        bytes32 txHash;
+        // While the suggested signed hash is usually provided, it is generally
+        // not recommended to rely on it to be present, since in the future
+        // there may be tx types with no suggested signed hash.
+        if (_suggestedSignedHash == bytes32(0)) {
+            txHash = _transaction.encodeHash();
+        } else {
+            txHash = _suggestedSignedHash;
+        }
+
+        // The fact there is are enough balance for the account
+        // should be checked explicitly to prevent user paying for fee for a
+        // transaction that wouldn't be included on Ethereum.
+        uint256 totalRequiredBalance = _transaction.totalRequiredBalance();
         require(
-            _transaction.totalRequiredBalance() <= address(this).balance,
+            totalRequiredBalance <= address(this).balance,
             "Not enough balance for fee + value"
         );
 
-        // In the future, the bootloader may not always provide the signed hash.
-        // So, here, we check and calculate the hash if it is not provided.
-        bytes32 txHash = _suggestedSignedHash != bytes32(0)
-            ? _suggestedSignedHash
-            : _transaction.encodeHash();
-
-        // Validate the transaction signature using the EOA signer.
-        bool shouldExecuteTransaction = isValidSignature(
-            eoaSigner,
-            txHash,
-            _transaction.signature
-        );
-
-        // If our validation checks arec correct, return the success magic value. If not, return 0 bytes.
-        magic = shouldExecuteTransaction
-            ? ACCOUNT_VALIDATION_SUCCESS_MAGIC
-            : bytes4(0);
+        if (
+            isValidSignature(txHash, _transaction.signature) ==
+            EIP1271_SUCCESS_RETURN_VALUE
+        ) {
+            magic = ACCOUNT_VALIDATION_SUCCESS_MAGIC;
+        } else {
+            magic = bytes4(0);
+        }
     }
 
-    /**
-     * @dev Executes a transaction by calling the target contract with the provided data.
-     * @param _transaction The transaction to execute.
-     * @notice This function uses the EfficientCall library to make the call and propagate any reverts.
-     */
-    function _execute(Transaction calldata _transaction) internal {
+    function executeTransaction(
+        bytes32,
+        bytes32,
+        Transaction calldata _transaction
+    ) external payable override onlyBootloader {
+        _executeTransaction(_transaction);
+    }
+
+    function _executeTransaction(Transaction calldata _transaction) internal {
         address to = address(uint160(_transaction.to));
         uint128 value = Utils.safeCastToU128(_transaction.value);
-        bytes calldata data = _transaction.data;
-        uint32 gas = Utils.safeCastToU32(gasleft());
+        bytes memory data = _transaction.data;
 
-        // Smart contract deployment transactions must go through the ContractDeployer system contract.
-        // Deployment transactions must also be a system call (isSystem).
-        // See https://docs.abs.xyz/how-abstract-works/evm-differences/contract-deployment
-        //     For more information on contract deployment in Abstract.
         if (to == address(DEPLOYER_SYSTEM_CONTRACT)) {
+            uint32 gas = Utils.safeCastToU32(gasleft());
+
+            // Note, that the deployer contract can only be called
+            // with a "systemCall" flag.
             SystemContractsCaller.systemCallWithPropagatedRevert(
                 gas,
                 to,
                 value,
                 data
             );
-        }
-        // If not a deployment transaction, execute the transaction directly.
-        // Use the EfficientCall library to make the call and propagate any reverts.
-        else {
-            bool success = EfficientCall.rawCall(gas, to, value, data, false);
-            if (!success) {
-                EfficientCall.propagateRevert();
+        } else {
+            bool success;
+            assembly {
+                success := call(
+                    gas(),
+                    to,
+                    value,
+                    add(data, 0x20),
+                    mload(data),
+                    0,
+                    0
+                )
             }
+            require(success);
         }
     }
 
-    fallback() external payable {
-        assert(msg.sender != BOOTLOADER_FORMAL_ADDRESS);
+    function executeTransactionFromOutside(
+        Transaction calldata _transaction
+    ) external payable {
+        bytes4 magic = _validateTransaction(bytes32(0), _transaction);
+        require(magic == ACCOUNT_VALIDATION_SUCCESS_MAGIC, "NOT VALIDATED");
+        _executeTransaction(_transaction);
     }
 
-    receive() external payable {}
+    function isValidSignature(
+        bytes32 _hash,
+        bytes memory _signature
+    ) public view override returns (bytes4 magic) {
+        magic = EIP1271_SUCCESS_RETURN_VALUE;
+
+        if (_signature.length != 65) {
+            // Signature is invalid anyway, but we need to proceed with the signature verification as usual
+            // in order for the fee estimation to work correctly
+            _signature = new bytes(65);
+
+            // Making sure that the signatures look like a valid ECDSA signature and are not rejected rightaway
+            // while skipping the main verification process.
+            _signature[64] = bytes1(uint8(27));
+        }
+
+        // extract ECDSA signature
+        uint8 v;
+        bytes32 r;
+        bytes32 s;
+        // Signature loading code
+        // we jump 32 (0x20) as the first slot of bytes contains the length
+        // we jump 65 (0x41) per signature
+        // for v we load 32 bytes ending with v (the first 31 come from s) then apply a mask
+        assembly {
+            r := mload(add(_signature, 0x20))
+            s := mload(add(_signature, 0x40))
+            v := and(mload(add(_signature, 0x41)), 0xff)
+        }
+
+        if (v != 27 && v != 28) {
+            magic = bytes4(0);
+        }
+
+        // EIP-2 still allows signature malleability for ecrecover(). Remove this possibility and make the signature
+        // unique. Appendix F in the Ethereum Yellow paper (https://ethereum.github.io/yellowpaper/paper.pdf), defines
+        // the valid range for s in (301): 0 < s < secp256k1n ÷ 2 + 1, and for v in (302): v ∈ {27, 28}. Most
+        // signatures from current libraries generate a unique signature with an s-value in the lower half order.
+        //
+        // If your library generates malleable signatures, such as s-values in the upper range, calculate a new s-value
+        // with 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141 - s1 and flip v from 27 to 28 or
+        // vice versa. If your library also generates signatures with 0/1 for v instead 27/28, add 27 to v to accept
+        // these malleable signatures as well.
+        if (
+            uint256(s) >
+            0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0
+        ) {
+            magic = bytes4(0);
+        }
+
+        address recoveredAddress = ecrecover(_hash, v, r, s);
+
+        // Note, that we should abstain from using the require here in order to allow for fee estimation to work
+        if (recoveredAddress != owner && recoveredAddress != address(0)) {
+            magic = bytes4(0);
+        }
+    }
+
+    function payForTransaction(
+        bytes32,
+        bytes32,
+        Transaction calldata _transaction
+    ) external payable override onlyBootloader {
+        bool success = _transaction.payToTheBootloader();
+        require(success, "Failed to pay the fee to the operator");
+    }
+
+    function prepareForPaymaster(
+        bytes32, // _txHash
+        bytes32, // _suggestedSignedHash
+        Transaction calldata _transaction
+    ) external payable override onlyBootloader {
+        _transaction.processPaymasterInput();
+    }
+
+    fallback() external {
+        // fallback of default account shouldn't be called by bootloader under no circumstances
+        assert(msg.sender != BOOTLOADER_FORMAL_ADDRESS);
+
+        // If the contract is called directly, behave like an EOA
+    }
+
+    receive() external payable {
+        // If the contract is called directly, behave like an EOA.
+        // Note, that is okay if the bootloader sends funds with no calldata as it may be used for refunds/operator payments
+    }
 }

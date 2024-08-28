@@ -5,11 +5,17 @@ import { Deployer } from "@matterlabs/hardhat-zksync";
 import { Provider, types, utils, Wallet } from "zksync-ethers";
 import { Contract, ContractTransactionReceipt, parseEther } from "ethers";
 import { EIP712Signer } from "zksync-ethers/build/signer";
-
-import "@matterlabs/hardhat-zksync-node/dist/type-extensions";
-import "@matterlabs/hardhat-zksync-verify/dist/src/type-extensions";
 import { EIP712_TX_TYPE, serializeEip712 } from "zksync-ethers/build/utils";
-import { eip712Domain, eip712Types } from "./utils";
+import {
+  eip712Domain,
+  eip712Types,
+  NFT_CONTRACT_ABI,
+  NFT_CONTRACT_ADDRESS,
+} from "./utils";
+import { TransactionRequest } from "zksync-ethers/build/types";
+
+import "@matterlabs/hardhat-zksync-verify/dist/src/type-extensions";
+import "@matterlabs/hardhat-zksync-node/dist/type-extensions";
 
 // An example of a deploy script that will deploy and call a simple contract.
 export default async function deploy(hre: HardhatRuntimeEnvironment) {
@@ -109,19 +115,26 @@ export default async function deploy(hre: HardhatRuntimeEnvironment) {
     );
   }
 
-  const to = Wallet.createRandom().address;
+  // const to = NFT_CONTRACT_ADDRESS;
+  // const nftContract = new Contract(to, NFT_CONTRACT_ABI, eoaWallet);
+  // const mintData = nftContract.interface.encodeFunctionData("mint", [
+  //   deployedContractAddress,
+  //   1,
+  // ]);
+  const to = "0x8e729E23CDc8bC21c37a73DA4bA9ebdddA3C8B6d";
   const nonce = await provider.getTransactionCount(deployedContractAddress);
   const gasPrice = await provider.getGasPrice();
   const gasLimit = await provider.estimateGas({
     from: deployedContractAddress,
-    to: to,
-    data: "0x69",
+    to,
+    data: "0x",
   });
 
-  // Create your transaction object
-  const tx = {
-    from: deployedContractAddress,
-    to: Wallet.createRandom().address,
+  // Create your transaction object, for example, mint an NFT
+  const tx: TransactionRequest = {
+    from: deployedContractAddress, // Smart contract address
+    to: to, // NFT contract address
+    data: "0x", // Mint function call
     nonce: nonce,
     gasLimit: gasLimit.toString(),
     gasPrice: gasPrice.toString(),
@@ -146,6 +159,8 @@ export default async function deploy(hre: HardhatRuntimeEnvironment) {
   // Serialize the transaction with the custom signature
   const serializedTx = serializeEip712({
     ...tx,
+    to: to,
+    from: deployedContractAddress,
     customData: {
       ...tx.customData,
       customSignature: rawSignature,
@@ -153,6 +168,9 @@ export default async function deploy(hre: HardhatRuntimeEnvironment) {
   });
 
   const transactionRequest = await provider.broadcastTransaction(serializedTx);
+
+  console.log("Submitting transaction from smart account...");
+
   const transactionResponse = await transactionRequest.wait();
 
   console.log(
@@ -178,7 +196,7 @@ const verifyContract = async (data: {
 };
 
 function logExplorerUrl(address: string, type: "address" | "tx") {
-  if (hre.network.name === "abstractTestnet") {
+  if (hre.network.name !== "abstractTestnet") {
     const explorerUrl = `https://explorer.testnet.abs.xyz/${type}/${address}`;
     const prettyType = type === "address" ? "account" : "transaction";
 
