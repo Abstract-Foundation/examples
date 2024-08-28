@@ -1,6 +1,6 @@
 # Smart Contract Accounts with Viem
 
-Build and deploy a [smart contract wallet](https://abstract.mintlify.app/how-abstract-works/native-account-abstraction/smart-contract-wallets) that can validate and execute transactions with arbitrary logic on Abstract using [viem](https://docs.abs.xyz/build-on-abstract/applications/viem).
+Build and deploy a [smart contract wallet](https://docs.abs.xyz/how-abstract-works/native-account-abstraction/smart-contract-wallets) that can validate and execute transactions with arbitrary logic on Abstract using [viem](https://docs.abs.xyz/build-on-abstract/applications/viem).
 
 ## Local Development
 

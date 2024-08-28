@@ -44,7 +44,7 @@ export default async function () {
 
   // If it does not have any funds, load funds to the contract from your EOA (set as Hardhat private key)
   if (balance == 0n) {
-    loadFundsToAccount(CONTRACT_ADDRESS, parseEther("0.001"));
+    await loadFundsToAccount(CONTRACT_ADDRESS, parseEther("0.001"));
   }
 
   const transactionHash = await walletClient.sendTransaction({
