@@ -4,9 +4,8 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { Deployer } from "@matterlabs/hardhat-zksync";
 import { Provider, types, utils, Wallet } from "zksync-ethers";
 import { Contract, ContractTransactionReceipt, parseEther } from "ethers";
-import { EIP712Signer } from "zksync-ethers/build/signer";
+import { EIP712_TYPES, EIP712Signer } from "zksync-ethers/build/signer";
 import { EIP712_TX_TYPE, serializeEip712 } from "zksync-ethers/build/utils";
-import { eip712Domain, eip712Types } from "./utils";
 import { TransactionRequest } from "zksync-ethers/build/types";
 
 import "@matterlabs/hardhat-zksync-verify/dist/src/type-extensions";
@@ -116,14 +115,14 @@ export default async function deploy(hre: HardhatRuntimeEnvironment) {
   const gasLimit = await provider.estimateGas({
     from: deployedContractAddress,
     to,
-    data: "0x",
+    data: "0x69",
   });
 
   // Create your transaction object, for example, mint an NFT
   const tx: TransactionRequest = {
     from: deployedContractAddress, // Smart contract address
-    to: to, // NFT contract address
-    data: "0x", // Mint function call
+    to: to,
+    data: "0x69",
     nonce: nonce,
     gasLimit: gasLimit.toString(),
     gasPrice: gasPrice.toString(),
@@ -140,8 +139,12 @@ export default async function deploy(hre: HardhatRuntimeEnvironment) {
 
   // Sign the typed data with the EOA wallet
   const rawSignature = await eoaWallet.signTypedData(
-    eip712Domain,
-    eip712Types,
+    {
+      name: "zkSync",
+      version: "2",
+      chainId: hre.network.config.chainId,
+    },
+    EIP712_TYPES,
     typedData
   );
 
