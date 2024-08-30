@@ -19,6 +19,9 @@
   "scripts": {
     "compile": "npx hardhat clean && npx hardhat compile --network abstractTestnet && npx hardhat compile --network baseSepolia",
     "deploy-abstract": "npx hardhat clean && npx hardhat compile --network abstractTestnet && npx hardhat deploy-zksync --script deploy-abstract-testnet.ts",
-    "deploy-base": "npx hardhat clean && npx hardhat compile --network baseSepolia && npx hardhat run deploy/deploy-base-sepolia.ts --network baseSepolia"
+    "deploy-base": "npx hardhat clean && npx hardhat compile --network baseSepolia && npx hardhat run deploy/deploy-base-sepolia.ts --network baseSepolia",
+    "connect-contracts": "npx hardhat run deploy/connect-contracts.ts",
+    "mint-nft": "npx hardhat run deploy/mint-nft.ts",
+    "bridge-to-abstract": "npx hardhat run deploy/bridge-to-abstract.ts"
   }
 }

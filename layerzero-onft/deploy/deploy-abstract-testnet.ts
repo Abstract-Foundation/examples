@@ -4,7 +4,7 @@ import { Deployer } from "@matterlabs/hardhat-zksync";
 import { vars } from "hardhat/config";
 
 // https://docs.layerzero.network/v2/developers/solana/technical-reference/deployed-contracts#abstract-testnet
-const ABSTRACT_TESTNET_LZ_ENDPOINT =
+export const ABSTRACT_TESTNET_LZ_ENDPOINT =
   "0x16c693A3924B947298F7227792953Cd6BBb21Ac8";
 
 // An example of a deploy script that will deploy and call a simple contract.

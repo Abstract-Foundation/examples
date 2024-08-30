@@ -9,4 +9,8 @@ contract MyONFT721 is ONFT721 {
         string memory _symbol,
         address _lzEndpoint
     ) ONFT721(_name, _symbol, _lzEndpoint) {}
+
+    function mint(address _to, uint256 _tokenId) public {
+        _mint(_to, _tokenId);
+    }
 }
