@@ -1,4 +1,4 @@
-import { Wallet } from "zksync-ethers";
+import { Contract, Wallet } from "zksync-ethers";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { Deployer } from "@matterlabs/hardhat-zksync";
 import { vars } from "hardhat/config";
@@ -19,13 +19,28 @@ export default async function (hre: HardhatRuntimeEnvironment) {
   const artifact = await deployer.loadArtifact("MyONFT721");
 
   // Deploy this contract. The returned object will be of a `Contract` type.
-  const nftContract = await deployer.deploy(artifact, [
+  const constructorArgs = [
     "MyONFT721", // Name
     "MONFT", // Symbol
     ABSTRACT_TESTNET_LZ_ENDPOINT, // LZ Endpoint
-  ]);
+  ];
+  const contractDeployment = await deployer.deploy(artifact, constructorArgs);
+
+  // Wait for deployment
+  await contractDeployment.waitForDeployment();
+  const contractAddress = await contractDeployment.getAddress();
+  const contract = new Contract(contractAddress, artifact.abi, wallet);
+
+  // Verify contract
+  await hre.run("verify:verify", {
+    address: contractAddress,
+    constructorArguments: contract.interface.encodeDeploy(constructorArgs),
+    bytecode: artifact.bytecode,
+    contract: `${artifact.sourceName}:${artifact.contractName}`,
+    noCompile: true,
+  });
 
   console.log(
-    `${artifact.contractName} was deployed to ${await nftContract.getAddress()}`
+    `✅ ${artifact.contractName} was deployed to ${contractAddress} on Abstract Testnet`
   );
 }
