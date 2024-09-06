@@ -1,0 +1,22 @@
+{
+  "name": "clients",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "run-ethers": "node --no-warnings --loader ts-node/esm ./src/ethers.ts",
+    "run-viem": "node --no-warnings --loader ts-node/esm ./src/viem.ts"
+  },
+  "keywords": [],
+  "author": "Jarrod Watts",
+  "license": "ISC",
+  "dependencies": {
+    "ethers": "^6.13.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4",
+    "viem": "^2.21.2",
+    "zksync-ethers": "^6.12.0"
+  }
+}
