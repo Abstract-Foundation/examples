@@ -4,6 +4,14 @@ import 'dotenv/config'
 // TODO: Replace with your private key value in the .env file.
 export const PRIVATE_KEY = process.env.PRIVATE_KEY as string;
 
+export function ensurePrivateKeyIsSet() {
+  if (!PRIVATE_KEY) {
+    throw new Error(`🛑 PRIVATE_KEY is not set in .env file
+        Run "cp .env.example .env" to create a new .env file
+        And add a wallet's private key as the value for PRIVATE_KEY in the .env file.`);
+  }
+}
+
 export const RPC_URL = "https://api.testnet.abs.xyz";
 export const RANDOM_SALT = randomBytes(32);
 

@@ -3,6 +3,7 @@ import {
   ACCOUNT_BYTECODE,
   ACCOUNT_FACTORY_ABI,
   ACCOUNT_FACTORY_BYTECODE,
+  ensurePrivateKeyIsSet,
   MY_CONTRACT_BYTECODE,
   MY_CONTRACT_FACTORY_ABI,
   MY_CONTRACT_FACTORY_BYTECODE,
@@ -33,7 +34,9 @@ async function deployMyContractFactory() {
 }
 
 async function deployMyContractUsingFactory(factoryContract) {
-  const createMyContract = await(await factoryContract.createMyContract()).wait();
+  const createMyContract = await (
+    await factoryContract.createMyContract()
+  ).wait();
 
   console.log(
     `✅ Deployed new contract via factory using create: ${createMyContract.contractAddress}`
@@ -52,20 +55,23 @@ async function deployAccountFactory() {
   const contract = await accountFactoryDeployer.deploy(
     accountBytecodeHash, // constructor args
     {
-    customData: {
-      // Add the bytecode for the Account.sol contract in the factoryDeps
-      factoryDeps: [ACCOUNT_BYTECODE],
-    },
-  });
+      customData: {
+        // Add the bytecode for the Account.sol contract in the factoryDeps
+        factoryDeps: [ACCOUNT_BYTECODE],
+      },
+    }
+  );
 
   console.log("✅ AccountFactory deployed at:", await contract.getAddress());
   return contract;
 }
 
 async function deployAccountUsingFactory(factoryContract) {
-  const createAccount = await(await factoryContract.createAccount(
-    wallet.address, // owner argument
-  )).wait();
+  const createAccount = await (
+    await factoryContract.createAccount(
+      wallet.address // owner argument
+    )
+  ).wait();
 
   console.log(
     `✅ Deployed new account via factory using create: ${createAccount.contractAddress}`
@@ -73,11 +79,13 @@ async function deployAccountUsingFactory(factoryContract) {
 }
 
 (async () => {
+  ensurePrivateKeyIsSet();
+
   // Regular smart contracts:
   const myContractFactory = await deployMyContractFactory();
   await deployMyContractUsingFactory(myContractFactory);
 
-  // Accounts:
+  // Smart contract accounts:
   const accountFactory = await deployAccountFactory();
   await deployAccountUsingFactory(accountFactory);
 })();
