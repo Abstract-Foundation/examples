@@ -22,7 +22,3 @@ Within each directory, you'll find a `README.md` file with instructions on how t
 | [Smart Contract Account Factory](https://github.com/Abstract-Foundation/examples/tree/main/smart-contract-accounts-factory)  | Build a factory smart contract that can create smart contract accounts that have a single EOA signer.                               |
 
 <br/>
-
-## License
-
-This project is licensed under the MIT License.

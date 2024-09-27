@@ -79,7 +79,6 @@ This is the setup instructions for the smart contracts of this repository.
    npm run run-viem
    ```
 
-
 ## Useful Links
 
 - [Docs](https://docs.abs.xyz/)
@@ -87,7 +86,3 @@ This is the setup instructions for the smart contracts of this repository.
 - [GitHub](https://github.com/Abstract-Foundation)
 - [X](https://x.com/AbstractChain)
 - [Discord](https://discord.com/invite/abstractchain)
-
-## License
-
-This project is under the [MIT](./LICENSE) license.
