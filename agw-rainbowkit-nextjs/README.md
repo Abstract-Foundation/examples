@@ -5,10 +5,10 @@ SDK with [RainbowKit](https://www.rainbowkit.com/) inside a [Next.js](https://ne
 
 ## Local Development
 
-1. Get a copy of the `agw-rainbowkit` example directory from the Abstract Examples repository:
+1. Get a copy of the `agw-rainbowkit-nextjs` example directory from the Abstract Examples repository:
 
    ```bash
-   mkdir -p agw-rainbowkit && curl -L https://codeload.github.com/Abstract-Foundation/examples/tar.gz/main | tar -xz --strip=2 -C agw-rainbowkit examples-main/agw-rainbowkit && cd agw-rainbowkit
+   mkdir -p agw-rainbowkit-nextjs && curl -L https://codeload.github.com/Abstract-Foundation/examples/tar.gz/main | tar -xz --strip=2 -C agw-rainbowkit-nextjs examples-main/agw-rainbowkit-nextjs && cd agw-rainbowkit-nextjs
    ```
 
 2. Install dependencies

@@ -3,10 +3,9 @@
 import Image from "next/image";
 import { useLoginWithAbstract } from "@abstract-foundation/agw-react";
 import { useAccount, useSendTransaction } from "wagmi";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export default function Home() {
-  const { logout } = useLoginWithAbstract();
+  const { login, logout } = useLoginWithAbstract();
   const { address, status } = useAccount();
   const { sendTransaction, isPending } = useSendTransaction();
 
@@ -82,46 +81,21 @@ export default function Home() {
                       }
                       disabled={!sendTransaction || isPending}
                     >
-                      {isPending ? (
-                        <svg
-                          className="animate-spin h-4 w-4"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                      ) : (
-                        <svg
-                          className="w-4 h-4 flex-shrink-0"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13 10V3L4 14h7v7l9-11h-7z"
-                          />
-                        </svg>
-                      )}
-                      <span className="w-full text-center">
-                        {isPending ? "Sending..." : "Submit tx"}
-                      </span>
+                      <svg
+                        className="w-4 h-4 flex-shrink-0"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 10V3L4 14h7v7l9-11h-7z"
+                        />
+                      </svg>
+                      <span className="w-full text-center">Submit tx</span>
                     </button>
                   </div>
                 </div>
@@ -131,15 +105,25 @@ export default function Home() {
                 <Image src="/abs.svg" alt="Loading" width={24} height={24} />
               </div>
             ) : (
-              <div className="inline-block border border-white/20 rounded-full p-4 transition-all duration-300 hover:border-white/40 hover:bg-white/10">
-                <ConnectButton />
-              </div>
+              <button
+                className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 font-[family-name:var(--font-roobert)]"
+                onClick={login}
+              >
+                <Image
+                  className="dark:invert"
+                  src="/abs.svg"
+                  alt="Abstract logomark"
+                  width={20}
+                  height={20}
+                />
+                Sign in with Abstract
+              </button>
             )}
           </div>
         </div>
       </main>
 
-      {/* Cards section */}
+      {/* Updated cards section */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-4xl mx-auto mt-8 font-[family-name:var(--font-roobert)]">
         <a
           href="https://docs.abs.xyz"
@@ -188,7 +172,7 @@ export default function Home() {
           className="flex flex-col items-center justify-center p-4 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 hover:border-white/20 transition-all h-full text-center backdrop-blur-sm"
         >
           <svg className="w-6 h-6 mb-2" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122-2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
           </svg>
           <h3 className="text-lg font-semibold mb-2 opacity-90">
             YouTube Channel
