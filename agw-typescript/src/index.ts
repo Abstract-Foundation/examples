@@ -11,8 +11,6 @@ import { getGeneralPaymasterInput } from "viem/zksync";
     const randomPrivateKey = generatePrivateKey(); // Make a random private key
     const account = privateKeyToAccount(randomPrivateKey); // Use that to create a signer
 
-    console.log("Account address:", account.address);
-
     // Create a viem client where:
     // - Transactions are signed by a given signer / EOA.
     // - Transactions are sent from the AGW smart contract wallet.
