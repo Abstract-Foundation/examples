@@ -9,11 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@abstract-foundation/agw-client": "^0.0.1-alpha.3",
-    "@abstract-foundation/agw-react": "^0.0.1-alpha.12",
+    "@abstract-foundation/agw-react": "^0.0.1-beta.2",
     "@rainbow-me/rainbowkit": "^2.1.7",
     "@tanstack/react-query": "^5.56.2",
+    "encoding": "^0.1.13",
     "next": "14.2.13",
+    "pino-pretty": "^11.2.2",
     "react": "^18",
     "react-dom": "^18",
     "viem": "^2.21.15",
