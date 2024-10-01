@@ -1,5 +1,5 @@
 {
-  "name": "create-abstract-app-template",
+  "name": "agw-nextjs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@abstract-foundation/agw-client": "^0.0.1-alpha.3",
-    "@abstract-foundation/agw-react": "^0.0.1-alpha.12",
+    "@abstract-foundation/agw-client": "^0.0.1-beta.2",
+    "@abstract-foundation/agw-react": "^0.0.1-beta.2",
     "next": "14.2.13",
     "react": "^18",
     "react-dom": "^18",

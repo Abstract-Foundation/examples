@@ -1,13 +1,27 @@
 "use client";
 
 import Image from "next/image";
-import { useLoginWithAbstract } from "@abstract-foundation/agw-react";
-import { useAccount, useSendTransaction } from "wagmi";
+import {
+  useLoginWithAbstract,
+  useWriteContractSponsored,
+} from "@abstract-foundation/agw-react";
+import {
+  useAccount,
+  useSendTransaction,
+  useWaitForTransactionReceipt,
+} from "wagmi";
+import { getGeneralPaymasterInput } from "viem/zksync";
+import { parseAbi } from "viem";
 
 export default function Home() {
   const { login, logout } = useLoginWithAbstract();
   const { address, status } = useAccount();
   const { sendTransaction, isPending } = useSendTransaction();
+  const { writeContractSponsored, data: transactionHash } =
+    useWriteContractSponsored();
+  const { data: transactionReceipt } = useWaitForTransactionReceipt({
+    hash: transactionHash,
+  });
 
   return (
     <div className="relative grid grid-rows-[1fr_auto] min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-avenue-mono)] bg-black overflow-hidden">
@@ -44,6 +58,15 @@ export default function Home() {
                       Connected to Abstract Global Wallet
                     </p>
                     <p className="text-xs text-gray-400 font-mono">{address}</p>
+                    <p className="text-sm sm:text-base font-medium font-[family-name:var(--font-roobert)] mb-1">
+                      <a
+                        href={`https://explorer.testnet.abs.xyz/address/${address}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View on Explorer
+                      </a>
+                    </p>
                   </div>
                   <div className="flex gap-2 w-full">
                     <button
@@ -74,12 +97,21 @@ export default function Home() {
                             : "bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent"
                         }`}
                       onClick={() =>
-                        sendTransaction({
-                          to: "0x273B3527BF5b607dE86F504fED49e1582dD2a1C6",
-                          data: "0x69",
+                        writeContractSponsored({
+                          abi: parseAbi([
+                            "function mint(address,uint256) external",
+                          ]),
+                          address: "0xC4822AbB9F05646A9Ce44EFa6dDcda0Bf45595AA",
+                          functionName: "mint",
+                          args: [address, BigInt(1)],
+                          paymaster:
+                            "0x5407B5040dec3D339A9247f3654E59EEccbb6391",
+                          paymasterInput: getGeneralPaymasterInput({
+                            innerInput: "0x",
+                          }),
                         })
                       }
-                      disabled={!sendTransaction || isPending}
+                      disabled={!writeContractSponsored || isPending}
                     >
                       <svg
                         className="w-4 h-4 flex-shrink-0"
@@ -98,6 +130,21 @@ export default function Home() {
                       <span className="w-full text-center">Submit tx</span>
                     </button>
                   </div>
+                  {!!transactionReceipt && (
+                    <a
+                      href={`https://explorer.testnet.abs.xyz/tx/${transactionReceipt?.transactionHash}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <p className="text-sm sm:text-base font-medium font-[family-name:var(--font-roobert)] mb-1">
+                        Transaction Status: {transactionReceipt?.status}
+                      </p>
+                      <p className="text-xs text-gray-400 font-mono">
+                        {transactionReceipt?.transactionHash?.slice(0, 8)}...
+                        {transactionReceipt?.transactionHash?.slice(-6)}
+                      </p>
+                    </a>
+                  )}
                 </div>
               </div>
             ) : status === "reconnecting" || status === "connecting" ? (
