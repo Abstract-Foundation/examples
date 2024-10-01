@@ -1,7 +1,7 @@
 {
   "name": "agw-typescript",
-  "version": "1.0.0",
-  "description": "Example of using the agw-client package",
+  "version": "0.0.1",
+  "description": "Example of using the agw-client package in a simple Typescript project",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -11,9 +11,11 @@
   "author": "jarrodwatts",
   "license": "ISC",
   "dependencies": {
-    "@abstract-foundation/agw-client": "^0.0.1-alpha.3",
-    "viem": "^2.21.15",
-    "@types/node": "^22.7.3",
+    "@abstract-foundation/agw-client": "^0.0.1-beta.2",
+    "viem": "^2.21.15"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.4",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2"
   }
