@@ -97,7 +97,3 @@ To demo the code, deploy and submit a gas-sponsored transaction from a wallet:
 - [GitHub](https://github.com/Abstract-Foundation)
 - [X](https://x.com/AbstractChain)
 - [Discord](https://discord.com/invite/abstractchain)
-
-## License
-
-This project is under the [MIT](./LICENSE) license.

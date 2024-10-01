@@ -25,7 +25,3 @@ This is the setup instructions for the application of this repository.
 - [GitHub](https://github.com/Abstract-Foundation)
 - [X](https://x.com/AbstractChain)
 - [Discord](https://discord.com/invite/abstractchain)
-
-## License
-
-This project is under the [MIT](./LICENSE) license.
