@@ -16,9 +16,9 @@ export default async function bridgeNftToAbstract(
 
   // Setup Base Sepolia provider and wallet
   const baseProvider = new JsonRpcProvider(
-    // @ts-ignore
-    hre.config.networks.baseSepolia.url!
+    `https://sepolia.base.org`
   );
+
   const baseWallet = new Wallet(vars.get("DEPLOYER_PRIVATE_KEY"), baseProvider);
 
   // Load the ONFT721 contract artifact and create contract instance
@@ -30,8 +30,8 @@ export default async function bridgeNftToAbstract(
   );
 
   // Parameters for the send function
-  const tokenId = 1; // Replace with the ID of the NFT you minted
-  const receiverAddress = "0x8e729E23CDc8bC21c37a73DA4bA9ebdddA3C8B6d"; // Replace with the receiver's address on the Abstract chain
+  const tokenId = 0; // Replace with the ID of the NFT you minted
+  const receiverAddress = "0x273B3527BF5b607dE86F504fED49e1582dD2a1C6"; // Replace with the receiver's address on the Abstract chain
 
   //   struct SendParam {
   //     uint32 dstEid; // Destination LayerZero EndpointV2 ID.
@@ -53,18 +53,15 @@ export default async function bridgeNftToAbstract(
   };
 
   // Get the messaging fee
-  //   const messagingFee = await baseNftContract.quoteSend(sendParam, false);
+  const messagingFee = await baseNftContract.quoteSend(sendParam, false);
 
   try {
     // Send the NFT
     const tx = await baseNftContract.send(
       sendParam,
-      {
-        nativeFee: ethers.parseEther("0.001"),
-        lzTokenFee: 0,
-      },
+      messagingFee,
       baseWallet.address,
-      { value: ethers.parseEther("0.001") }
+      { value: messagingFee.nativeFee }
     );
 
     console.log("Bridging transaction sent. Waiting for confirmation...");

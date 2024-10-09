@@ -1,6 +1,6 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { vars } from "hardhat/config";
-import { Contract, ethers, JsonRpcProvider, Wallet } from "ethers";
+import { Contract, ContractFactory, ethers, JsonRpcProvider, Wallet } from "ethers";
 import { config } from "./connect-contracts";
 
 // https://docs.layerzero.network/v2/developers/solana/technical-reference/deployed-contracts#base-sepolia
@@ -18,52 +18,28 @@ export default async function deploy(hre: HardhatRuntimeEnvironment) {
   );
   const baseWallet = new Wallet(vars.get("DEPLOYER_PRIVATE_KEY"), baseProvider);
 
-  // Load the ONFT721 contract artifact and create contract instance
+  // Load the ONFT721 contract artifact
   const baseArtifact = await hre.artifacts.readArtifact("MyONFT721");
-  const baseNftContract = new Contract(
-    config.baseSepolia.nftContractAddress,
-    baseArtifact.abi,
-    baseWallet
-  );
 
-  // Parameters for the send function
-  const tokenId = 1; // Replace with the ID of the NFT you minted
-  const abstractChainId = 1234; // Replace with the correct chain ID for your Abstract chain
-  const receiverAddress = "0x..."; // Replace with the receiver's address on the Abstract chain
+  // Deploy this contract. The returned object will be of a `Contract` type.
+  const constructorArgs = [
+    "MyONFT721", // Name
+    "MONFT", // Symbol
+    BASE_SEPOLIA_LZ_ENDPOINT, // LZ Endpoint
+  ];
 
-  // Prepare the SendParam
-  const sendParam = {
-    dstEid: abstractChainId,
-    to: ethers.zeroPadValue(ethers.toBeHex(receiverAddress), 32), // Convert address to bytes32
-    tokenId: tokenId,
-    extraOptions: "0x",
-    composeMsg: "0x",
-  };
+  const contractDeployer = new ContractFactory(baseArtifact.abi, baseArtifact.bytecode, baseWallet);
+  const contractDeployment = await contractDeployer.deploy(...constructorArgs);
 
-  // Get the messaging fee
-  const messagingFee = await baseNftContract.quoteSend(sendParam, false);
+  // Wait for deployment
+  await contractDeployment.waitForDeployment();
+  const contractAddress = await contractDeployment.getAddress();
+  const contract = new Contract(contractAddress, baseArtifact.abi, baseWallet);
 
-  try {
-    // Send the NFT
-    const tx = await baseNftContract.send(
-      sendParam,
-      messagingFee,
-      baseWallet.address,
-      { value: messagingFee.nativeFee }
-    );
+  console.log(
+    `✅ ${baseArtifact.contractName} was deployed to ${contractAddress} on Base Sepolia Testnet`
+  )
 
-    console.log("Bridging transaction sent. Waiting for confirmation...");
-    const receipt = await tx.wait();
-
-    console.log(`✅ NFT bridged from Base Sepolia to Abstract chain
-    - Transaction Hash: ${receipt.hash}
-    - From: ${baseWallet.address}
-    - To: ${receiverAddress}
-    - Token ID: ${tokenId}
-  `);
-  } catch (error) {
-    console.error("Error bridging NFT:", error);
-  }
 }
 
 deploy(require("hardhat"));

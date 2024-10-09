@@ -1,5 +1,5 @@
-import { HardhatUserConfig } from "hardhat/config";
 import "@matterlabs/hardhat-zksync";
+import { HardhatUserConfig } from "hardhat/config";
 import { vars } from "hardhat/config";
 
 const config: HardhatUserConfig = {

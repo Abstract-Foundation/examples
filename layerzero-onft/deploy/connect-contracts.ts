@@ -11,12 +11,12 @@ export const config = {
   baseSepolia: {
     endpointId: 40245,
     // Replace with your own NFT contract address
-    nftContractAddress: "0xbb88079dfd7c4c1063BeBBDE1E50304A5305bBC7",
+    nftContractAddress: "0x64D71429d50172CD3B759126C4C43a3dA8B0a038",
   },
   abstractTestnet: {
     endpointId: 40313,
     // Replace with your own NFT contract address
-    nftContractAddress: "0xB0E840a2ef487350eaF211dC4977B8CEBC7D615a",
+    nftContractAddress: "0x8442F3845C460AA33eDB2837A9daf627C4D0EfF2",
   },
 };
 
