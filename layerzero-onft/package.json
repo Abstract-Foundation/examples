@@ -1,0 +1,27 @@
+{
+  "name": "hardhat-project",
+  "devDependencies": {
+    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.39",
+    "@layerzerolabs/oapp-evm": "^0.0.4",
+    "@layerzerolabs/onft-evm": "^0.0.7",
+    "@matterlabs/hardhat-zksync": "^1.1.0",
+    "@matterlabs/hardhat-zksync-upgradable": "^1.5.2",
+    "@matterlabs/zksync-contracts": "^0.6.1",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^4.9.5",
+    "@openzeppelin/contracts-upgradeable": "^4.9.5",
+    "ethers": "^6.13.2",
+    "hardhat": "^2.22.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4",
+    "zksync-ethers": "^6.12.0"
+  },
+  "scripts": {
+    "compile": "npx hardhat clean && npx hardhat compile --network abstractTestnet && npx hardhat compile --network baseSepolia",
+    "deploy-abstract": "npx hardhat clean && npx hardhat compile --network abstractTestnet && npx hardhat deploy-zksync --script deploy-abstract-testnet.ts",
+    "deploy-base": "npx hardhat clean && npx hardhat compile --network baseSepolia && npx hardhat run deploy/deploy-base-sepolia.ts --network baseSepolia",
+    "connect-contracts": "npx hardhat run deploy/connect-contracts.ts",
+    "mint-nft": "npx hardhat run deploy/mint-nft.ts --network baseSepolia",
+    "bridge-to-abstract": "npx hardhat run deploy/bridge-to-abstract.ts"
+  }
+}
