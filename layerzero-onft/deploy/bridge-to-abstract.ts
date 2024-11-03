@@ -1,10 +1,5 @@
-import {
-  Contract,
-  ethers,
-  JsonRpcProvider,
-  Wallet,
-  zeroPadBytes,
-} from "ethers";
+import { Contract, ethers, JsonRpcProvider, Wallet } from "ethers";
+import { Options } from '@layerzerolabs/lz-v2-utilities';
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { vars } from "hardhat/config";
 import { config } from "./connect-contracts";
@@ -15,9 +10,7 @@ export default async function bridgeNftToAbstract(
   console.log(`Running bridge script`);
 
   // Setup Base Sepolia provider and wallet
-  const baseProvider = new JsonRpcProvider(
-    `https://sepolia.base.org`
-  );
+  const baseProvider = new JsonRpcProvider(`https://sepolia.base.org`);
 
   const baseWallet = new Wallet(vars.get("DEPLOYER_PRIVATE_KEY"), baseProvider);
 
@@ -33,35 +26,30 @@ export default async function bridgeNftToAbstract(
   const tokenId = 0; // Replace with the ID of the NFT you minted
   const receiverAddress = "0x273B3527BF5b607dE86F504fED49e1582dD2a1C6"; // Replace with the receiver's address on the Abstract chain
 
-  //   struct SendParam {
-  //     uint32 dstEid; // Destination LayerZero EndpointV2 ID.
-  //     bytes32 to; // Recipient address.
-  //     uint256 tokenId;
-  //     bytes extraOptions; // Additional options supplied by the caller to be used in the LayerZero message.
-  //     bytes composeMsg; // The composed message for the send() operation.
-  //     bytes onftCmd; // The ONFT command to be executed, unused in default ONFT implementations.
-  // }
+  const GAS_LIMIT = 2000000; // Gas limit for the executor
+  const MSG_VALUE = 0; // msg.value for the lzReceive() fun ction on destination in wei
+  const _options = Options.newOptions().addExecutorLzReceiveOption(GAS_LIMIT, MSG_VALUE);
 
-  // Prepare the SendParam
   const sendParam = {
-    dstEid: config.abstractTestnet.endpointId,
+    dstEid: BigInt(config.abstractTestnet.endpointId),
     to: ethers.zeroPadBytes(receiverAddress, 32), // Convert address to bytes32
     tokenId: tokenId,
-    extraOptions: "0x",
-    composeMsg: "0x",
+    extraOptions: _options.toHex(), // Use the manually constructed extraOptions
+    composeMsg: "0x", // Keep as is or modify as needed
     onftCmd: "0x",
   };
 
   // Get the messaging fee
   const messagingFee = await baseNftContract.quoteSend(sendParam, false);
+  const nativeFee = messagingFee[0]; // Extract the native fee value
 
   try {
     // Send the NFT
     const tx = await baseNftContract.send(
       sendParam,
-      messagingFee,
+      { nativeFee, zroFee: 0n, lzTokenFee: 0n },
       baseWallet.address,
-      { value: messagingFee.nativeFee }
+      { value: nativeFee } // Use the extracted nativeFee
     );
 
     console.log("Bridging transaction sent. Waiting for confirmation...");

@@ -1,7 +1,3 @@
-/**
- * https://docs.layerzero.network/v2/developers/evm/onft/quickstart#deployment-workflow
- */
-
 import { Contract, JsonRpcProvider, Wallet, zeroPadValue } from "ethers";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { vars } from "hardhat/config";
@@ -73,4 +69,4 @@ export default async function connectContract(hre: HardhatRuntimeEnvironment) {
 }
 
 // Run the script
-// connectContract(require("hardhat"));
+connectContract(require("hardhat"));

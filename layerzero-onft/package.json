@@ -2,6 +2,7 @@
   "name": "hardhat-project",
   "devDependencies": {
     "@layerzerolabs/lz-evm-protocol-v2": "^2.3.39",
+    "@layerzerolabs/lz-v2-utilities": "^3.0.11",
     "@layerzerolabs/oapp-evm": "^0.0.4",
     "@layerzerolabs/onft-evm": "^0.0.7",
     "@matterlabs/hardhat-zksync": "^1.1.0",

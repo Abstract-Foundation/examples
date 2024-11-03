@@ -1,7 +1,6 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { vars } from "hardhat/config";
-import { Contract, ContractFactory, ethers, JsonRpcProvider, Wallet } from "ethers";
-import { config } from "./connect-contracts";
+import { ContractFactory, JsonRpcProvider, Wallet } from "ethers";
 
 // https://docs.layerzero.network/v2/developers/solana/technical-reference/deployed-contracts#base-sepolia
 export const BASE_SEPOLIA_LZ_ENDPOINT =
@@ -34,7 +33,6 @@ export default async function deploy(hre: HardhatRuntimeEnvironment) {
   // Wait for deployment
   await contractDeployment.waitForDeployment();
   const contractAddress = await contractDeployment.getAddress();
-  const contract = new Contract(contractAddress, baseArtifact.abi, baseWallet);
 
   console.log(
     `✅ ${baseArtifact.contractName} was deployed to ${contractAddress} on Base Sepolia Testnet`
