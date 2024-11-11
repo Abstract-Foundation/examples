@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useAccount } from "wagmi";
 import { getGeneralPaymasterInput } from "viem/zksync";
-import { parseAbi } from "viem";
+import { Address, parseAbi } from "viem";
 import { useDynamicContext, DynamicWidget } from "@dynamic-labs/sdk-react-core";
+import { isEthereumWallet } from "@dynamic-labs/ethereum";
 
 export default function Home() {
   const { primaryWallet, handleLogOut } = useDynamicContext();
@@ -47,14 +47,16 @@ export default function Home() {
           </p>
 
           <div className="flex justify-center">
-            {status === "connected" ? (
+            {primaryWallet && isEthereumWallet(primaryWallet) ? (
               <div className="bg-white/5 border border-white/10 rounded-lg p-6 shadow-lg backdrop-blur-sm max-w-sm w-full">
                 <div className="flex flex-col items-center gap-4">
                   <div className="text-center">
                     <p className="text-sm sm:text-base font-medium font-[family-name:var(--font-roobert)] mb-1">
                       Connected to Abstract Global Wallet
                     </p>
-                    <p className="text-xs text-gray-400 font-mono">{primaryWallet?.address}</p>
+                    <p className="text-xs text-gray-400 font-mono">
+                      {primaryWallet?.address}
+                    </p>
                     <p className="text-sm sm:text-base font-medium font-[family-name:var(--font-roobert)] mb-1">
                       <a
                         href={`https://explorer.testnet.abs.xyz/address/${primaryWallet?.address}`}
@@ -89,26 +91,34 @@ export default function Home() {
                     <button
                       className={`rounded-full border border-solid transition-colors flex items-center justify-center text-white gap-2 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] flex-1 w-[140px]
                         ${
-                           !true //writeContractSponsored
-                             ? "bg-gray-500 cursor-not-allowed opacity-50"
-                             : "bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent"
+                          !true //writeContractSponsored
+                            ? "bg-gray-500 cursor-not-allowed opacity-50"
+                            : "bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent"
                         }`}
-                      onClick={() => {
-                        // writeContractSponsored({
-                        //   abi: parseAbi([
-                        //     "function mint(address,uint256) external",
-                        //   ]),
-                        //   address: "0xC4822AbB9F05646A9Ce44EFa6dDcda0Bf45595AA",
-                        //   functionName: "mint",
-                        //   args: [address, BigInt(1)],
-                        //   paymaster:
-                        //     "0x5407B5040dec3D339A9247f3654E59EEccbb6391",
-                        //   paymasterInput: getGeneralPaymasterInput({
-                        //     innerInput: "0x",
-                        //   }),
-                        // })
+                      onClick={async () => {
+                        if (primaryWallet && isEthereumWallet(primaryWallet)) {
+                          const walletClient =
+                            await primaryWallet.getWalletClient();
+
+                          const paymasterArgs = {
+                            paymaster:
+                              "0x5407B5040dec3D339A9247f3654E59EEccbb6391",
+                            paymasterInput: getGeneralPaymasterInput({
+                              innerInput: "0x",
+                            }),
+                          };
+                          walletClient.writeContract({
+                            abi: parseAbi([
+                              "function mint(address,uint256) external",
+                            ]),
+                            address:
+                              "0xC4822AbB9F05646A9Ce44EFa6dDcda0Bf45595AA",
+                            functionName: "mint",
+                            args: [primaryWallet.address as Address, BigInt(1)],
+                            ...paymasterArgs,
+                          });
                         }
-                      }
+                      }}
                       // disabled={!writeContractSponsored}
                     >
                       <svg
@@ -128,7 +138,7 @@ export default function Home() {
                       <span className="w-full text-center">Submit tx</span>
                     </button>
                   </div>
-                  {/* {!!transactionReceipt && (
+                  {/*{!!transactionReceipt && (
                     <a
                       href={`https://explorer.testnet.abs.xyz/tx/${transactionReceipt?.transactionHash}`}
                       target="_blank"
