@@ -9,9 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@dynamic-labs-connectors/abstract-global-wallet-evm": "file://~/code/abstract/public-wallet-connectors/packages/@dynamic-labs-connectors/abstract-global-wallet-evm",
+    "@dynamic-labs-connectors/abstract-global-wallet-evm": "4.0.0-alpha.5",
     "@dynamic-labs/ethereum": "4.0.0-alpha.29",
     "@dynamic-labs/sdk-react-core": "4.0.0-alpha.29",
+    "@privy-io/cross-app-connect": "0.0.8",
     "encoding": "^0.1.13",
     "next": "14.2.13",
     "pino-pretty": "^11.2.2",

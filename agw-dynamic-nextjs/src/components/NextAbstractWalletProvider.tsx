@@ -32,7 +32,7 @@ export default function NextAbstractWalletProvider({
         evmNetworks: [
           toDynamicChain(
             abstractTestnet,
-            "https://d9s2izusg5pvp.cloudfront.net/icon/light.png"
+            "https://abstract-assets.abs.xyz/icons/light.png"
           ),
         ],
       },
