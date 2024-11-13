@@ -8,9 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@abstract-foundation/agw-client':
+        specifier: ^0.0.1-beta.20
+        version: 0.0.1-beta.20(abitype@1.0.6(typescript@5.6.3)(zod@3.22.4))(typescript@5.6.3)(viem@2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4))
       '@abstract-foundation/agw-react':
         specifier: ^0.0.1-beta.19
-        version: 0.0.1-beta.19(quagyhrok2yzrwnvips7qqc7ue)
+        version: 0.0.1-beta.19(4u4qceolqqgvovuzlqt473hmqq)
       encoding:
         specifier: ^0.1.13
         version: 0.1.13
@@ -63,8 +66,8 @@ importers:
 
 packages:
 
-  '@abstract-foundation/agw-client@0.0.1-beta.19':
-    resolution: {integrity: sha512-2pC8M2x+zJBxN7ygBSHVscf73we8Gv39IKLtesDn7AhzafvW2zV8wrOX5HKewpalO/efna9kMHJ1a0n25FwUjw==}
+  '@abstract-foundation/agw-client@0.0.1-beta.20':
+    resolution: {integrity: sha512-zKw7RhowvbOtmi2zg8DgNaPiMpEHF74rLRSsnHFAe71zFrk1+kIkX5CAWOc+F5QHzQwKABTDA9ZbsiWoUh2Azg==}
     peerDependencies:
       abitype: ^1.0.0
       typescript: '>=5.0.4'
@@ -6327,18 +6330,18 @@ packages:
 
 snapshots:
 
-  '@abstract-foundation/agw-client@0.0.1-beta.19(abitype@1.0.6(typescript@5.6.3)(zod@3.22.4))(typescript@5.6.3)(viem@2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4))':
+  '@abstract-foundation/agw-client@0.0.1-beta.20(abitype@1.0.6(typescript@5.6.3)(zod@3.22.4))(typescript@5.6.3)(viem@2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4))':
     dependencies:
       abitype: 1.0.6(typescript@5.6.3)(zod@3.22.4)
       viem: 2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4)
     optionalDependencies:
       typescript: 5.6.3
 
-  '@abstract-foundation/agw-react@0.0.1-beta.19(quagyhrok2yzrwnvips7qqc7ue)':
+  '@abstract-foundation/agw-react@0.0.1-beta.19(4u4qceolqqgvovuzlqt473hmqq)':
     dependencies:
-      '@abstract-foundation/agw-client': 0.0.1-beta.19(abitype@1.0.6(typescript@5.6.3)(zod@3.22.4))(typescript@5.6.3)(viem@2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4))
+      '@abstract-foundation/agw-client': 0.0.1-beta.20(abitype@1.0.6(typescript@5.6.3)(zod@3.22.4))(typescript@5.6.3)(viem@2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4))
       '@privy-io/cross-app-connect': 0.0.8(@wagmi/core@2.14.4(@tanstack/query-core@5.59.20)(@types/react@18.3.12)(react@18.3.1)(typescript@5.6.3)(use-sync-external-store@1.2.0(react@18.3.1))(viem@2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4)))(viem@2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4))
-      '@privy-io/react-auth': 1.94.0(@abstract-foundation/agw-client@0.0.1-beta.19(abitype@1.0.6(typescript@5.6.3)(zod@3.22.4))(typescript@5.6.3)(viem@2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4)))(@solana/web3.js@1.95.4(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10))(@types/react@18.3.12)(bs58@5.0.0)(bufferutil@4.0.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4)
+      '@privy-io/react-auth': 1.94.0(@abstract-foundation/agw-client@0.0.1-beta.20(abitype@1.0.6(typescript@5.6.3)(zod@3.22.4))(typescript@5.6.3)(viem@2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4)))(@solana/web3.js@1.95.4(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10))(@types/react@18.3.12)(bs58@5.0.0)(bufferutil@4.0.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4)
       '@tanstack/react-query': 5.59.20(react@18.3.1)
       react: 18.3.1
       viem: 2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4)
@@ -8317,7 +8320,7 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@privy-io/react-auth@1.94.0(@abstract-foundation/agw-client@0.0.1-beta.19(abitype@1.0.6(typescript@5.6.3)(zod@3.22.4))(typescript@5.6.3)(viem@2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4)))(@solana/web3.js@1.95.4(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10))(@types/react@18.3.12)(bs58@5.0.0)(bufferutil@4.0.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4)':
+  '@privy-io/react-auth@1.94.0(@abstract-foundation/agw-client@0.0.1-beta.20(abitype@1.0.6(typescript@5.6.3)(zod@3.22.4))(typescript@5.6.3)(viem@2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4)))(@solana/web3.js@1.95.4(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10))(@types/react@18.3.12)(bs58@5.0.0)(bufferutil@4.0.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4)':
     dependencies:
       '@coinbase/wallet-sdk': 4.0.3
       '@ethersproject/abstract-signer': 5.7.0
@@ -8341,7 +8344,7 @@ snapshots:
       '@solana/wallet-standard-wallet-adapter-base': 1.1.2(@solana/web3.js@1.95.4(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10))(bs58@5.0.0)
       '@solana/wallet-standard-wallet-adapter-react': 1.1.2(@solana/wallet-adapter-base@0.9.23(@solana/web3.js@1.95.4(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)))(@solana/web3.js@1.95.4(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10))(bs58@5.0.0)(react@18.3.1)
       '@wallet-standard/app': 1.1.0
-      '@walletconnect/ethereum-provider': 2.17.0(@types/react@18.3.12)(bufferutil@4.0.8)(encoding@0.1.13)(react@18.3.1)(utf-8-validate@5.0.10)
+      '@walletconnect/ethereum-provider': 2.17.2(@types/react@18.3.12)(bufferutil@4.0.8)(encoding@0.1.13)(react@18.3.1)(utf-8-validate@5.0.10)
       '@walletconnect/modal': 2.7.0(@types/react@18.3.12)(react@18.3.1)
       base64-js: 1.5.1
       dotenv: 16.4.5
@@ -8368,7 +8371,7 @@ snapshots:
       web3-core: 1.10.4(encoding@0.1.13)
       web3-core-helpers: 1.10.3
     optionalDependencies:
-      '@abstract-foundation/agw-client': 0.0.1-beta.19(abitype@1.0.6(typescript@5.6.3)(zod@3.22.4))(typescript@5.6.3)(viem@2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4))
+      '@abstract-foundation/agw-client': 0.0.1-beta.20(abitype@1.0.6(typescript@5.6.3)(zod@3.22.4))(typescript@5.6.3)(viem@2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4))
       '@solana/web3.js': 1.95.4(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - '@azure/app-configuration'

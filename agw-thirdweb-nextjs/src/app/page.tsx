@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import { Address } from "viem";
+import { abstractWallet } from "@abstract-foundation/agw-react/thirdweb";
 import { createThirdwebClient, prepareContractCall, sendTransaction, getContract } from "thirdweb";
 import { useActiveAccount, useDisconnect, ConnectButton, useActiveWallet } from "thirdweb/react";
 import { abstractTestnet} from "thirdweb/chains"
-
 export default function Home() {
 
   const client = createThirdwebClient({
@@ -159,7 +159,10 @@ export default function Home() {
                 </div>
               </div>
             ) : (
-              <ConnectButton client={client} />
+              <ConnectButton 
+                client={client} 
+                showAllWallets={false}
+                wallets={[abstractWallet()]}  />
             )}
           </div>
         </div>
