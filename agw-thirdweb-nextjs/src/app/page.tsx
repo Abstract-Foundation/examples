@@ -1,13 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { Address } from "viem";
+import { Address, defineChain } from "viem";
 import { abstractWallet } from "@abstract-foundation/agw-react/thirdweb";
-import { createThirdwebClient, prepareContractCall, sendTransaction, getContract } from "thirdweb";
-import { useActiveAccount, useDisconnect, ConnectButton, useActiveWallet } from "thirdweb/react";
-import { abstractTestnet} from "thirdweb/chains"
+import { createThirdwebClient, getContract, prepareContractCall } from "thirdweb";
+import {
+  useActiveAccount,
+  useDisconnect,
+  ConnectButton,
+  useActiveWallet,
+  useSendTransaction
+} from "thirdweb/react";
+import { abstractTestnet } from "thirdweb/chains";
 export default function Home() {
-
   const client = createThirdwebClient({
     clientId: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID as string,
   });
@@ -15,6 +20,7 @@ export default function Home() {
   const wallet = useActiveWallet();
   const account = useActiveAccount();
   const { disconnect } = useDisconnect();
+  const { mutateAsync: sendTransaction } = useSendTransaction();
 
   return (
     <div className="relative grid grid-rows-[1fr_auto] min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-avenue-mono)] bg-black overflow-hidden">
@@ -103,25 +109,20 @@ export default function Home() {
                             : "bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent"
                         }`}
                       onClick={async () => {
+                        const contract = getContract({
+                          address: "0xC4822AbB9F05646A9Ce44EFa6dDcda0Bf45595AA",
+                          chain: abstractTestnet,
+                          client,
+                        });
 
-                          const contract = getContract({
-                            address: "0xC4822AbB9F05646A9Ce44EFa6dDcda0Bf45595AA",
-                            chain: abstractTestnet,
-                            client,
-                          });
+                        const contractCall = prepareContractCall({
+                          contract,
+                          method: "function mint(address,uint256)",
+                          params: [account?.address as Address, BigInt(1)],
+                        });
 
-                          const contractCall = prepareContractCall({
-                            contract,
-                            method: "function mint(address,uint256)",
-                            params: [account?.address as Address, BigInt(1)],
-                          });
-
-                          const tx = await sendTransaction({
-                            account: account!,
-                            transaction: contractCall,
-                          });
-                        }
-                      }
+                        const tx = await sendTransaction(contractCall);
+                      }}
                       // disabled={!writeContractSponsored}
                     >
                       <svg
@@ -159,10 +160,15 @@ export default function Home() {
                 </div>
               </div>
             ) : (
-              <ConnectButton 
-                client={client} 
+              <ConnectButton
+                client={client}
                 showAllWallets={false}
-                wallets={[abstractWallet()]}  />
+                wallets={[abstractWallet()]}
+                accountAbstraction={{
+                  chain: abstractTestnet,
+                  sponsorGas: true,
+                }}
+              />
             )}
           </div>
         </div>
