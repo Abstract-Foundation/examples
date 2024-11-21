@@ -1,13 +1,14 @@
-# Abstract Global Wallet with Next.js
+# Abstract Global Wallet with Privy
 
-This example showcases how to use the Abstract Global Wallet react SDK inside a [Next.js](https://nextjs.org/) application.
+This example showcases how to use the Abstract Global Wallet react
+SDK with [Privy](https://privy.io/) inside a [Next.js](https://nextjs.org/) application.
 
 ## Local Development
 
-1. Get a copy of the `agw-nextjs` example directory from the Abstract Examples repository:
+1. Get a copy of the `agw-privy-nextjs` example directory from the Abstract Examples repository:
 
    ```bash
-   mkdir -p agw-nextjs && curl -L https://codeload.github.com/Abstract-Foundation/examples/tar.gz/main | tar -xz --strip=2 -C agw-nextjs examples-main/agw-nextjs && cd agw-nextjs
+   mkdir -p agw-privy-nextjs && curl -L https://codeload.github.com/Abstract-Foundation/examples/tar.gz/main | tar -xz --strip=2 -C agw-privy-nextjs examples-main/agw-privy-nextjs && cd agw-privy-nextjs
    ```
 
 2. Install dependencies
