@@ -1,19 +1,78 @@
 "use client";
 
 import Image from "next/image";
-import { useLoginWithAbstract, useWriteContractSponsored } from "@abstract-foundation/agw-react";
-import { useAccount, useSendTransaction, useWaitForTransactionReceipt } from "wagmi";
+import {
+  useAbstractClient,
+  useLoginWithAbstract,
+} from "@abstract-foundation/agw-react";
+import {
+  useAccount,
+} from "wagmi";
 import { getGeneralPaymasterInput } from "viem/zksync";
-import { parseAbi } from "viem";
+import { toFunctionSelector, parseEther } from "viem";
+import { parseAbi, type Account } from "viem";
+import { privateKeyToAccount, generatePrivateKey } from "viem/accounts";
+import {
+  LimitType,
+  LimitZero,
+  SessionConfig,
+} from "@abstract-foundation/agw-client/sessions";
+import { abstractTestnet } from "wagmi/chains";
+import { useState, useMemo, useCallback, useEffect } from "react";
+import { replaceBigInts } from "@/utils/replaceBigInts";
+import { Hash } from "crypto";
 
 export default function Home() {
   const { login, logout } = useLoginWithAbstract();
   const { address, status } = useAccount();
-  const { sendTransaction, isPending } = useSendTransaction();
-  const { writeContractSponsored, data: transactionHash } = useWriteContractSponsored();
-  const { data: transactionReceipt } = useWaitForTransactionReceipt({
-    hash: transactionHash,
-  });
+  const { data: client } = useAbstractClient();
+
+  const [transactionHashes, setTransactionHashes] = useState<Hash[]>([]);
+
+  const [session, setSessionState] = useState<SessionConfig | undefined>();
+
+  const addTransactionHash = (hash: Hash) => {
+    setTransactionHashes((existing) => {
+      return [...existing, hash];
+    });
+  };
+
+  const accountKey = useMemo(() => {
+    let key = localStorage.getItem("agw.sessions.accountKey");
+    if (!key) {
+      key = generatePrivateKey();
+      localStorage.setItem("agw.sessions.accountKey", key);
+    }
+    return key;
+  }, []);
+
+  const sessionSigner = useMemo(() => {
+    if (accountKey) {
+      return privateKeyToAccount(accountKey as `0x${string}`);
+    }
+    return undefined;
+  }, [accountKey]);
+
+  const setSession = useCallback((session: SessionConfig | undefined) => {
+    if (session) {
+      localStorage.setItem(
+        `agw.sessions.session.${address}`,
+        JSON.stringify(replaceBigInts(session, (value) => value.toString()))
+      );
+    } else {
+      localStorage.removeItem(`agw.sessions.session.${address}`);
+    }
+    setSessionState(session);
+  }, [address, setSessionState]);
+
+  useEffect(() => {
+    const storedSession = localStorage.getItem(`agw.sessions.session.${address}`);
+    if (storedSession) {
+      setSessionState(JSON.parse(storedSession));
+    } else {
+      setSessionState(undefined);
+    }
+  }, [address]);
 
   return (
     <div className="relative grid grid-rows-[1fr_auto] min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-avenue-mono)] bg-black overflow-hidden">
@@ -43,7 +102,7 @@ export default function Home() {
 
           <div className="flex justify-center w-full">
             {status === "connected" ? (
-              <div className="bg-white/5 border border-white/10 rounded-lg p-6 shadow-lg backdrop-blur-sm w-full max-w-sm">
+              <div className="bg-white/5 border border-white/10 rounded-lg p-6 shadow-lg backdrop-blur-sm w-full">
                 <div className="flex flex-col items-center gap-4">
                   <div className="text-center">
                     <p className="text-sm sm:text-base font-medium font-[family-name:var(--font-roobert)] mb-1">
@@ -83,65 +142,141 @@ export default function Home() {
                       </svg>
                       Disconnect
                     </button>
-                    <button
-                      className={`rounded-full border border-solid transition-colors flex items-center justify-center text-white gap-2 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] w-full sm:flex-1
-                        ${!sendTransaction || isPending
-                          ? "bg-gray-500 cursor-not-allowed opacity-50"
-                          : "bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent"
-                        }`}
-                      onClick={() =>
-                        writeContractSponsored({
-                          abi: parseAbi([
-                            "function mint(address,uint256) external",
-                          ]),
-                          address: "0xC4822AbB9F05646A9Ce44EFa6dDcda0Bf45595AA",
-                          functionName: "mint",
-                          args: [address, BigInt(1)],
-                          paymaster:
-                            "0x5407B5040dec3D339A9247f3654E59EEccbb6391",
-                          paymasterInput: getGeneralPaymasterInput({
-                            innerInput: "0x",
-                          }),
-                        })
-                      }
-                      disabled={!writeContractSponsored || isPending}
-                    >
-                      <svg
-                        className="w-4 h-4 flex-shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
+                    {session === undefined ? (
+                      <button
+                        className={`w-full rounded-full border border-solid transition-colors flex items-center justify-center text-white gap-2 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] sm:flex-2
+                        bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent`}
+                        onClick={async () => {
+                          if (!client || !sessionSigner) return;
+
+                          const { session: newSession } =
+                            await client.createSession({
+                              session: {
+                                signer:  sessionSigner.address,
+                                
+                                  expiresAt: BigInt(
+                                    Math.floor(Date.now() / 1000) + 60 * 60 * 24
+                                  ),
+                                  feeLimit: {
+                                    limitType: LimitType.Lifetime,
+                                    limit: parseEther("1"),
+                                    period: BigInt(0),
+                                  },
+                                  callPolicies: [
+                                    {
+                                      target:
+                                        "0xC4822AbB9F05646A9Ce44EFa6dDcda0Bf45595AA",
+                                      selector: toFunctionSelector(
+                                        "mint(address,uint256)"
+                                      ),
+                                      valueLimit: LimitZero,
+                                      maxValuePerUse: BigInt(0),
+                                      constraints: [],
+                                    },
+                                  ],
+                                  transferPolicies: [],
+                                },
+                              
+                            });
+
+                          setSession(newSession);
+                        }}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M13 10V3L4 14h7v7l9-11h-7z"
-                        />
-                      </svg>
-                      <span className="w-full text-center">Submit tx</span>
-                    </button>
+                        <svg
+                          className="w-4 h-4 flex-shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 10V3L4 14h7v7l9-11h-7z"
+                          />
+                        </svg>
+                        <span className="w-full text-center">
+                          Create Session
+                        </span>
+                      </button>
+                    ) : (
+                      <button
+                        className={`rounded-full border border-solid transition-colors flex items-center justify-center text-white gap-2 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] w-full sm:flex-1
+                        bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent`}
+                        onClick={async () => {
+                          if (!client || !sessionSigner) return;
+
+                          const sessionClient = client.toSessionClient(
+                            sessionSigner as Account,
+                            session
+                          );
+
+                          try {
+                            const tx = await sessionClient?.writeContract({
+                              account: sessionClient.account,
+                              chain: abstractTestnet,
+                              abi: parseAbi([
+                                "function mint(address,uint256) external",
+                              ]),
+                              address:
+                                "0xC4822AbB9F05646A9Ce44EFa6dDcda0Bf45595AA",
+                              functionName: "mint",
+                              args: [address, BigInt(1)],
+                              paymaster:
+                                "0x5407B5040dec3D339A9247f3654E59EEccbb6391",
+                              paymasterInput: getGeneralPaymasterInput({
+                                innerInput: "0x",
+                              }),
+                            });
+                            addTransactionHash(tx);
+                            console.log("transaction", tx);
+                          } catch (e) {
+                            console.error("error", e);
+                          }
+                        }}
+                      >
+                        <svg
+                          className="w-4 h-4 flex-shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 10V3L4 14h7v7l9-11h-7z"
+                          />
+                        </svg>
+                        <span className="w-full text-center">Mint NFT</span>
+                      </button>
+                    )}
                   </div>
-                  {!!transactionReceipt && (
-                    <a
-                      href={`https://explorer.testnet.abs.xyz/tx/${transactionReceipt?.transactionHash}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <p className="text-sm sm:text-base font-medium font-[family-name:var(--font-roobert)] mb-1">
-                        Transaction Status: {transactionReceipt?.status}
-                      </p>
-                      <p className="text-xs text-gray-400 font-mono">
-                        {transactionReceipt?.transactionHash?.slice(0, 8)}...
-                        {transactionReceipt?.transactionHash?.slice(-6)}
-                      </p>
-                    </a>
-                  )}
+                  {transactionHashes.length > 0 &&
+                    transactionHashes.map((hash) => (
+                      <div key={hash}>
+                        <a
+                          href={`https://explorer.testnet.abs.xyz/tx/${hash}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <p className="text-xs text-gray-400 font-mono">
+                            {hash.slice(0, 8)}
+                            ...
+                            {hash.slice(-6)}
+                          </p>
+                        </a>
+                      </div>
+                    ))}
                 </div>
               </div>
             ) : status === "reconnecting" || status === "connecting" ? (
-              <div id="loading-spinner-container" className="flex items-center justify-center w-10 h-10">
+              <div
+                id="loading-spinner-container"
+                className="flex items-center justify-center w-10 h-10"
+              >
                 <div id="loading-spinner" className="animate-spin">
                   <Image src="/abs.svg" alt="Loading" width={24} height={24} />
                 </div>
