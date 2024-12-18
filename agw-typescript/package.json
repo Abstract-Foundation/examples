@@ -11,7 +11,7 @@
   "author": "jarrodwatts",
   "license": "ISC",
   "dependencies": {
-    "@abstract-foundation/agw-client": "^0.0.1-beta.2",
+    "@abstract-foundation/agw-client": "^0.1.0",
     "viem": "^2.21.15"
   },
   "devDependencies": {
