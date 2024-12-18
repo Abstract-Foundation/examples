@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@privy-io/cross-app-connect": "^0.1.2",
     "@abstract-foundation/agw-react": "^0.1.0",
     "@abstract-foundation/agw-client": "^0.1.0",
     "encoding": "^0.1.13",
