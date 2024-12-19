@@ -10,8 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@abstract-foundation/agw-client": "^0.0.1-beta.2",
-    "@abstract-foundation/agw-react": "^0.0.1-beta.5",
+    "@abstract-foundation/agw-client": "^0.1.0",
+    "@abstract-foundation/agw-react": "^0.1.0",
     "react": "^18",
     "react-dom": "^18",
     "wagmi": "^2.12.14"
