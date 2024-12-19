@@ -54,7 +54,7 @@ npx hardhat vars set DEPLOYER_PRIVATE_KEY <your_private_key_here>
 ## Available Commands
 
 ```bash
-# Clean the project
+# Clean the project and remove all artifacts
 npm run clean
 
 # Compile contracts for Abstract
