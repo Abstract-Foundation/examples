@@ -35,7 +35,6 @@ This project demonstrates a subscription payment system built on Abstract. It in
 4. Signature validation for all transactions
 5. Balance checks before payments
 
-
 ## Setup
 
 1. Install dependencies:

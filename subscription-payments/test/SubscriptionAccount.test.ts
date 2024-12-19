@@ -2,7 +2,6 @@ import { time, loadFixture } from '@nomicfoundation/hardhat-toolbox/network-help
 import { expect } from 'chai';
 import { anyValue } from '@nomicfoundation/hardhat-chai-matchers/withArgs';
 import hre from 'hardhat';
-import { SubscriptionAccount, SubscriptionRegistry } from '../typechain-types';
 
 describe('SubscriptionAccount', function () {
   const PLAN_AMOUNT = hre.ethers.parseEther('0.1'); // 0.1 ETH

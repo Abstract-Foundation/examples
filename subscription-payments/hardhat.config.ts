@@ -1,6 +1,8 @@
 import { HardhatUserConfig } from 'hardhat/config';
 import '@matterlabs/hardhat-zksync';
 import '@nomicfoundation/hardhat-chai-matchers';
+import '@typechain/hardhat';
+import '@nomicfoundation/hardhat-ethers';
 
 const config: HardhatUserConfig = {
   zksolc: {
@@ -30,6 +32,10 @@ const config: HardhatUserConfig = {
       },
       viaIR: true,
     },
+  },
+  typechain: {
+    outDir: 'typechain-types',
+    target: 'ethers-v6',
   },
 };
 

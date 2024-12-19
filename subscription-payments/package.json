@@ -1,7 +1,7 @@
 {
   "name": "hardhat-project",
   "scripts": {
-    "clean": "hardhat clean && rm -rf cache cache-zk artifacts artifacts-zk artifacts-abstract deployments-zk deployments-abstract anvil-zksync.log anvil-abstract.log",
+    "clean": "hardhat clean && rm -rf cache cache-zk artifacts artifacts-zk artifacts-abstract deployments-zk deployments-abstract anvil-zksync.log anvil-abstract.log node_modules",
     "compile": "hardhat compile --network abstractTestnet",
     "test": "hardhat test",
     "deploy": "hardhat deploy-zksync --script deploy.ts --network abstractTestnet",
