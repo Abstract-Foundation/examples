@@ -1,0 +1,43 @@
+node_modules
+.env
+.env.local
+
+# Hardhat files
+cache
+cache-zk
+artifacts
+artifacts-zk
+artifacts-abstract
+deployments
+deployments-zk
+deployments-abstract
+anvil-zksync.log
+anvil-abstract.log
+
+# TypeChain files
+typechain
+typechain-types
+
+# solidity-coverage files
+coverage
+coverage.json
+
+# Hardhat Ignition deployment files
+ignition/deployments
+ignition/deployments/chain-31337
+
+# IDE files
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Debug logs
+debug.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

@@ -1,0 +1,25 @@
+# Dependencies
+node_modules
+
+# Build artifacts
+artifacts
+artifacts-zk
+artifacts-abstract
+cache
+cache-zk
+coverage
+typechain-types
+dist
+deployments-zk
+deployments-abstract
+
+# Logs and environment
+.env
+*.log
+anvil-zksync.log
+anvil-abstract.log
+
+# IDE and system files
+.DS_Store
+.idea
+.vscode
