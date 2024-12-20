@@ -40,7 +40,7 @@ yarn deploy-abstract
 
 We link the two contracts together using LayerZero so we can bridge NFTs between the two chains.
 
-First, take the contract addresses from the previous steps, and add them to the `config` object in [`deploy/connect-contracts.ts`](deploy/connect-contracts.ts):
+First, take the contract addresses from the previous steps, and add them to the `config` object in [`deploy/config.ts`](deploy/config.ts):
 
 ```typescript
 export const config = {

@@ -1,8 +1,8 @@
+import { Options } from "@layerzerolabs/lz-v2-utilities";
 import { Contract, ethers, JsonRpcProvider, Wallet } from "ethers";
-import { Options } from '@layerzerolabs/lz-v2-utilities';
-import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { vars } from "hardhat/config";
-import { config } from "./connect-contracts";
+import { HardhatRuntimeEnvironment } from "hardhat/types";
+import { config } from "./config";
 
 export default async function bridgeNftToAbstract(
   hre: HardhatRuntimeEnvironment
@@ -28,7 +28,10 @@ export default async function bridgeNftToAbstract(
 
   const GAS_LIMIT = 2000000; // Gas limit for the executor
   const MSG_VALUE = 0; // msg.value for the lzReceive() fun ction on destination in wei
-  const _options = Options.newOptions().addExecutorLzReceiveOption(GAS_LIMIT, MSG_VALUE);
+  const _options = Options.newOptions().addExecutorLzReceiveOption(
+    GAS_LIMIT,
+    MSG_VALUE
+  );
 
   const sendParam = {
     dstEid: BigInt(config.abstractTestnet.endpointId),
