@@ -1,14 +1,12 @@
 import { Contract, JsonRpcProvider, Wallet } from "ethers";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { vars } from "hardhat/config";
-import { config } from "./connect-contracts";
+import { HardhatRuntimeEnvironment } from "hardhat/types";
+import { config } from "./config";
 
 export default async function mintNft(hre: HardhatRuntimeEnvironment) {
   console.log("Running mint NFT script...");
 
-  const baseProvider = new JsonRpcProvider(
-    `https://sepolia.base.org`
-  );
+  const baseProvider = new JsonRpcProvider(`https://sepolia.base.org`);
 
   const baseWallet = new Wallet(vars.get("DEPLOYER_PRIVATE_KEY"), baseProvider);
   const baseArtifact = await hre.artifacts.readArtifact("MyONFT721");
