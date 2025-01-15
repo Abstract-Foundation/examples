@@ -13,13 +13,13 @@ This example showcases how to use [session keys](https://docs.abs.xyz/abstract-g
 2. Install dependencies
 
    ```bash
-   npm install
+   pnpm install
    ```
 
 3. Run the development server
 
    ```bash
-   npm run dev
+   pnpm dev
    ```
 
 Visit [http://localhost:3000](http://localhost:3000) to see the app.
