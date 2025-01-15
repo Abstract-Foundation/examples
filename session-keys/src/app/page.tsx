@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { ConnectWallet } from "@/components/wallet/ConnectWallet";
-import { CreateSession } from "@/components/wallet/CreateSession";
-import { MintNft } from "@/components/wallet/MintNft";
+import { ConnectWallet } from "@/components/ConnectWallet";
+import { CreateSession } from "@/components/CreateSession";
+import { MintNft } from "@/components/MintNft";
 import { useAccount } from "wagmi";
 import { SessionConfig } from "@abstract-foundation/agw-client/sessions";
 import { Account } from "viem";
@@ -29,11 +29,11 @@ export default function Home() {
       <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-gradient-to-tl from-[#4ade80] to-transparent opacity-10 blur-3xl"></div>
 
       {/* Main content */}
-      <main className="relative flex flex-col items-center mt-20 z-10 text-white text-center">
-        <h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-5xl mb-8">
-          Session Keys Demo
-        </h1>
-        <div className="w-full max-w-md space-y-6">
+      <main className="relative flex flex-col items-center justify-center -mt-20 z-10 text-white text-center w-full">
+        <div className="flex flex-col items-center w-full max-w-md space-y-6 mx-auto">
+          <h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-5xl mb-8 whitespace-nowrap">
+            Session Keys Demo
+          </h1>
           <ConnectWallet />
 
           {status === "connected" && !sessionData && (
