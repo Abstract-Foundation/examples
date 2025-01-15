@@ -14,6 +14,9 @@ importers:
       '@abstract-foundation/agw-react':
         specifier: ^1.0.0
         version: 1.0.0(5k4me2ueamjj3baefdrclhr7vu)
+      '@privy-io/cross-app-connect':
+        specifier: ^0.1.2
+        version: 0.1.2(@rainbow-me/rainbowkit@2.2.1(@tanstack/react-query@5.62.8(react@18.3.1))(@types/react@18.3.17)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(viem@2.21.55(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.10)(zod@3.24.1))(wagmi@2.14.3(@tanstack/query-core@5.62.8)(@tanstack/react-query@5.62.8(react@18.3.1))(@types/react@18.3.17)(bufferutil@4.0.8)(encoding@0.1.13)(react@18.3.1)(typescript@5.7.2)(utf-8-validate@5.0.10)(viem@2.21.55(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)))(@wagmi/core@2.16.0(@tanstack/query-core@5.62.8)(@types/react@18.3.17)(react@18.3.1)(typescript@5.7.2)(use-sync-external-store@1.2.0(react@18.3.1))(viem@2.21.55(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.10)(zod@3.24.1)))(viem@2.21.55(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.10)(zod@3.24.1))
       '@rainbow-me/rainbowkit':
         specifier: ^2.1.7
         version: 2.2.1(@tanstack/react-query@5.62.8(react@18.3.1))(@types/react@18.3.17)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(viem@2.21.55(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.10)(zod@3.24.1))(wagmi@2.14.3(@tanstack/query-core@5.62.8)(@tanstack/react-query@5.62.8(react@18.3.1))(@types/react@18.3.17)(bufferutil@4.0.8)(encoding@0.1.13)(react@18.3.1)(typescript@5.7.2)(utf-8-validate@5.0.10)(viem@2.21.55(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1))
