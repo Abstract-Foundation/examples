@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@dynamic-labs-connectors/abstract-global-wallet-evm':
-        specifier: 4.0.0-alpha.5
-        version: 4.0.0-alpha.5(zwygcwijfgwqqpdi5owianyowq)
+        specifier: 4.0.0-alpha.6
+        version: 4.0.0-alpha.6(7vhmuzrefjnpekqakietfaw6ku)
       '@dynamic-labs/ethereum':
         specifier: 4.0.0-alpha.29
         version: 4.0.0-alpha.29(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@dynamic-labs/logger@4.0.0-alpha.29(eventemitter3@5.0.1))(@dynamic-labs/rpc-providers@4.0.0-alpha.29(eventemitter3@5.0.1))(@types/react@18.3.12)(bufferutil@4.0.8)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(utf-8-validate@5.0.10)(viem@2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4))
@@ -782,14 +782,13 @@ packages:
   '@coinbase/wallet-sdk@4.2.1':
     resolution: {integrity: sha512-5bKucgWcogXpFNQdahdr7ApNe/bgVeUDHPXO+5O1XPuFctA8V8+cyF6ANLwPWvHJEMBOPsMhIeqDIVmMzHYmaw==}
 
-  '@dynamic-labs-connectors/abstract-global-wallet-evm@4.0.0-alpha.5':
-    resolution: {integrity: sha512-D7DwarnOF9xiC/k2NxjctAtwyFLiRKpOllxEfCNkXeg3/wx7d76LRxnmEPVt+PSTLByYyWRkwRENRQuCq5cRJA==}
+  '@dynamic-labs-connectors/abstract-global-wallet-evm@4.0.0-alpha.6':
+    resolution: {integrity: sha512-eL1KB/qi3cDg2q4sXAqQth/RzbE5sVJa8ad9o7byDHehLlo047u3s4Sz1N8mzhfyNhZNLfX1MFgAJXEee9IHUA==}
     peerDependencies:
-      '@dynamic-labs/ethereum': ^4.0.0-alpha.29
-      '@dynamic-labs/ethereum-core': ^4.0.0-alpha.29
-      '@dynamic-labs/utils': ^4.0.0-alpha.29
-      '@dynamic-labs/wallet-book': ^4.0.0-alpha.29
-      '@dynamic-labs/wallet-connector-core': ^4.0.0-alpha.29
+      '@dynamic-labs/ethereum': ^4.0.0-alpha.35
+      '@dynamic-labs/ethereum-core': ^4.0.0-alpha.35
+      '@dynamic-labs/utils': ^4.0.0-alpha.35
+      '@dynamic-labs/wallet-connector-core': ^4.0.0-alpha.35
       '@privy-io/cross-app-connect': ^0.0.8
       viem: ^2.21.29
 
@@ -6603,13 +6602,12 @@ snapshots:
       - supports-color
       - terser
 
-  '@dynamic-labs-connectors/abstract-global-wallet-evm@4.0.0-alpha.5(zwygcwijfgwqqpdi5owianyowq)':
+  '@dynamic-labs-connectors/abstract-global-wallet-evm@4.0.0-alpha.6(7vhmuzrefjnpekqakietfaw6ku)':
     dependencies:
       '@abstract-foundation/agw-client': 0.0.1-beta.20(abitype@1.0.6(typescript@5.6.3)(zod@3.22.4))(typescript@5.6.3)(viem@2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4))
       '@dynamic-labs/ethereum': 4.0.0-alpha.29(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@dynamic-labs/logger@4.0.0-alpha.29(eventemitter3@5.0.1))(@dynamic-labs/rpc-providers@4.0.0-alpha.29(eventemitter3@5.0.1))(@types/react@18.3.12)(bufferutil@4.0.8)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(utf-8-validate@5.0.10)(viem@2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4))
       '@dynamic-labs/ethereum-core': 4.0.0-alpha.29(@dynamic-labs/assert-package-version@4.0.0-alpha.29(eventemitter3@5.0.1))(@dynamic-labs/logger@4.0.0-alpha.29(eventemitter3@5.0.1))(@dynamic-labs/rpc-providers@4.0.0-alpha.29(eventemitter3@5.0.1))(@dynamic-labs/types@4.0.0-alpha.29(eventemitter3@5.0.1))(@dynamic-labs/utils@4.0.0-alpha.29)(@dynamic-labs/wallet-book@4.0.0-alpha.29(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@dynamic-labs/wallet-connector-core@4.0.0-alpha.29(@dynamic-labs/assert-package-version@4.0.0-alpha.29(eventemitter3@5.0.1))(@dynamic-labs/logger@4.0.0-alpha.29(eventemitter3@5.0.1))(@dynamic-labs/rpc-providers@4.0.0-alpha.29(eventemitter3@5.0.1))(@dynamic-labs/types@4.0.0-alpha.29(eventemitter3@5.0.1))(@dynamic-labs/utils@4.0.0-alpha.29)(@dynamic-labs/wallet-book@4.0.0-alpha.29(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(eventemitter3@5.0.1))(viem@2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4))
       '@dynamic-labs/utils': 4.0.0-alpha.29
-      '@dynamic-labs/wallet-book': 4.0.0-alpha.29(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@dynamic-labs/wallet-connector-core': 4.0.0-alpha.29(@dynamic-labs/assert-package-version@4.0.0-alpha.29(eventemitter3@5.0.1))(@dynamic-labs/logger@4.0.0-alpha.29(eventemitter3@5.0.1))(@dynamic-labs/rpc-providers@4.0.0-alpha.29(eventemitter3@5.0.1))(@dynamic-labs/types@4.0.0-alpha.29(eventemitter3@5.0.1))(@dynamic-labs/utils@4.0.0-alpha.29)(@dynamic-labs/wallet-book@4.0.0-alpha.29(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(eventemitter3@5.0.1)
       '@privy-io/cross-app-connect': 0.0.8(@wagmi/core@2.14.4(@tanstack/query-core@5.59.20)(@types/react@18.3.12)(react@18.3.1)(typescript@5.6.3)(use-sync-external-store@1.2.0(react@18.3.1))(viem@2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4)))(viem@2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4))
       viem: 2.21.44(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.22.4)
@@ -9749,8 +9747,8 @@ snapshots:
       '@typescript-eslint/parser': 8.13.0(eslint@8.57.1)(typescript@5.6.3)
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.3(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint@8.57.1))(eslint@8.57.1)
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1)
+      eslint-import-resolver-typescript: 3.6.3(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@8.57.1)
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@8.57.1)
       eslint-plugin-react: 7.37.2(eslint@8.57.1)
       eslint-plugin-react-hooks: 5.0.0-canary-7118f5dd7-20230705(eslint@8.57.1)
@@ -9769,37 +9767,37 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint@8.57.1))(eslint@8.57.1):
+  eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@8.57.1):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
       debug: 4.3.7
       enhanced-resolve: 5.17.1
       eslint: 8.57.1
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1)
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1)
       fast-glob: 3.3.2
       get-tsconfig: 4.8.1
       is-bun-module: 1.2.1
       is-glob: 4.0.3
     optionalDependencies:
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1)
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1)
     transitivePeerDependencies:
       - '@typescript-eslint/parser'
       - eslint-import-resolver-node
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 8.13.0(eslint@8.57.1)(typescript@5.6.3)
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.3(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint@8.57.1))(eslint@8.57.1)
+      eslint-import-resolver-typescript: 3.6.3(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@8.57.1)
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1):
+  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8
@@ -9810,7 +9808,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1)
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.13.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1)
       hasown: 2.0.2
       is-core-module: 2.15.1
       is-glob: 4.0.3
