@@ -5,9 +5,12 @@ import { getGeneralPaymasterInput } from "viem/zksync";
 import { Address, parseAbi } from "viem";
 import { useDynamicContext, DynamicWidget } from "@dynamic-labs/sdk-react-core";
 import { isEthereumWallet } from "@dynamic-labs/ethereum";
+import { useState } from "react";
 
 export default function Home() {
   const { primaryWallet, handleLogOut } = useDynamicContext();
+
+  const [counter, setCounter] = useState(0);
 
   return (
     <div className="relative grid grid-rows-[1fr_auto] min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-avenue-mono)] bg-black overflow-hidden">
@@ -39,11 +42,8 @@ export default function Home() {
             />
           </div>
           <p className="text-md font-[family-name:var(--font-roobert)]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
+            {counter}
+            <button onClick={() => setCounter(counter + 1)}>Click me</button>
           </p>
 
           <div className="flex justify-center">

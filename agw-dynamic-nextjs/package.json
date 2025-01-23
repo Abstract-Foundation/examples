@@ -9,10 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@dynamic-labs-connectors/abstract-global-wallet-evm": "4.0.0",
-    "@dynamic-labs/ethereum": "4.0.0",
-    "@dynamic-labs/sdk-react-core": "4.0.0",
-    "@privy-io/cross-app-connect": "0.1.2",
+    "@abstract-foundation/agw-client": "^1.1.1",
+    "@dynamic-labs-connectors/abstract-global-wallet-evm": "3.2.5",
+    "@dynamic-labs/ethereum": "3.9.7",
+    "@dynamic-labs/sdk-react-core": "3.9.7",
+    "@privy-io/cross-app-connect": "0.1.4",
     "encoding": "^0.1.13",
     "next": "14.2.13",
     "pino-pretty": "^11.2.2",
