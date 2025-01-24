@@ -5,12 +5,22 @@ import { getGeneralPaymasterInput } from "viem/zksync";
 import { Address, parseAbi } from "viem";
 import { useDynamicContext, DynamicWidget } from "@dynamic-labs/sdk-react-core";
 import { isEthereumWallet } from "@dynamic-labs/ethereum";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAccount, useWalletClient } from "wagmi";
 
 export default function Home() {
-  const { primaryWallet, handleLogOut } = useDynamicContext();
+  const { handleLogOut } = useDynamicContext();
+
+  const { address } = useAccount();
+  const { data: walletClient } = useWalletClient();
 
   const [counter, setCounter] = useState(0);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setCounter((prev) => prev + 1);
+    }, 500);
+  }, [counter]);
 
   return (
     <div className="relative grid grid-rows-[1fr_auto] min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-avenue-mono)] bg-black overflow-hidden">
@@ -47,7 +57,7 @@ export default function Home() {
           </p>
 
           <div className="flex justify-center">
-            {primaryWallet && isEthereumWallet(primaryWallet) ? (
+            {walletClient !== undefined ? (
               <div className="bg-white/5 border border-white/10 rounded-lg p-6 shadow-lg backdrop-blur-sm max-w-sm w-full">
                 <div className="flex flex-col items-center gap-4">
                   <div className="text-center">
@@ -55,11 +65,11 @@ export default function Home() {
                       Connected to Abstract Global Wallet
                     </p>
                     <p className="text-xs text-gray-400 font-mono">
-                      {primaryWallet?.address}
+                      {address}
                     </p>
                     <p className="text-sm sm:text-base font-medium font-[family-name:var(--font-roobert)] mb-1">
                       <a
-                        href={`https://explorer.testnet.abs.xyz/address/${primaryWallet?.address}`}
+                        href={`https://explorer.testnet.abs.xyz/address/${address}`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -96,10 +106,7 @@ export default function Home() {
                             : "bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent"
                         }`}
                       onClick={async () => {
-                        if (primaryWallet && isEthereumWallet(primaryWallet)) {
-                          const walletClient =
-                            await primaryWallet.getWalletClient();
-
+                        if (walletClient !== undefined) {
                           const paymasterArgs = {
                             paymaster:
                               "0x5407B5040dec3D339A9247f3654E59EEccbb6391",
@@ -114,7 +121,7 @@ export default function Home() {
                             address:
                               "0xC4822AbB9F05646A9Ce44EFa6dDcda0Bf45595AA",
                             functionName: "mint",
-                            args: [primaryWallet.address as Address, BigInt(1)],
+                            args: [address as Address, BigInt(1)],
                             ...paymasterArgs,
                           });
                         }

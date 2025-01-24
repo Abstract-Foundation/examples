@@ -13,14 +13,16 @@
     "@dynamic-labs-connectors/abstract-global-wallet-evm": "3.2.5",
     "@dynamic-labs/ethereum": "3.9.7",
     "@dynamic-labs/sdk-react-core": "3.9.7",
+    "@dynamic-labs/wagmi-connector": "3.9.7",
     "@privy-io/cross-app-connect": "0.1.4",
+    "@tanstack/react-query": "^5.64.2",
     "encoding": "^0.1.13",
     "next": "14.2.13",
     "pino-pretty": "^11.2.2",
     "react": "^18",
     "react-dom": "^18",
-    "viem": "^2.21.44",
-    "wagmi": "^2.12.29"
+    "viem": "2.21.29",
+    "wagmi": "2.11.2"
   },
   "devDependencies": {
     "@types/node": "^20",
