@@ -4,3 +4,6 @@
 [submodule "contracts/lib/ExclusiveDelegateResolver"]
 	path = contracts/lib/ExclusiveDelegateResolver
 	url = https://github.com/yuga-labs/ExclusiveDelegateResolver
+[submodule "contracts/lib/solady"]
+	path = contracts/lib/solady
+	url = https://github.com/vectorized/solady
