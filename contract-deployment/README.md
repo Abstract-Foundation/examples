@@ -14,7 +14,7 @@ mkdir -p contract-deployment && curl -L https://codeload.github.com/Abstract-Fou
 
 ### Hardhat
 
-1. Change directory into the `hardhat` folder and install the dependencies.
+1. Change the directory into the `hardhat` folder and install the dependencies.
 
    ```bash
    cd hardhat
@@ -49,7 +49,7 @@ This is the setup instructions for the smart contracts of this repository.
 
 ### Ethers / zksync-ethers
 
-1. Change directory into the `clients` folder.
+1. Change the directory into the `clients` folder.
 
    ```bash
    cd clients
@@ -70,7 +70,7 @@ This is the setup instructions for the smart contracts of this repository.
    cp .env.example .env
    ```
 
-   Replace the `PRIVATE_KEY` value with your wallet private key.
+   Replace the `PRIVATE_KEY` value with your wallet's private key.
 
 4. Run the scripts
 
