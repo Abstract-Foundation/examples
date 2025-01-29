@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Swap DEX</title>
+</head>
+<body>
+</body>
+</html>
+<style>
+    .swap-container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        background: #fff;
+    }
+    .swap-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .token-input-container {
+        background: #f7f8fa;
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 8px;
+    }
+    .token-input {
+        width: 100%;
+        border: none;
+        background: transparent;
+        font-size: 24px;
+        outline: none;
+    }
+    .swap-button {
+        width: 100%;
+        padding: 16px;
+        border-radius: 12px;
+        border: none;
+        background: #E8006F;
+        color: white;
+        font-size: 18px;
+        cursor: pointer;
+        margin-top: 12px;
+    }
+    .swap-button:hover {
+        background: #d1006a;
+    }
+</style>
+
+<div class="swap-container">
+    <div class="swap-header">
+        <h2>Swap</h2>
+        <div class="settings">⚙️</div>
+    </div>
+    
+    <div class="token-input-container">
+        <input type="number" class="token-input" placeholder="0.0" id="ethInput">
+        <div>ETH</div>
+    </div>
+    
+    <div style="text-align: center; margin: 10px 0;">
+        ↓
+    </div>
+    
+    <div class="token-input-container">
+        <input type="number" class="token-input" placeholder="0.0" id="abstractInput">
+        <div>ABSTRACT</div>
+    </div>
+    
+    <button class="swap-button" onclick="performSwap()">Swap</button>
+</div>
+
+<script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js"></script>
+<script>
+    // Uniswap V2 Router Contract Address (Mainnet)
+    const UNISWAP_ROUTER_ADDRESS = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D';
+    const ABSTRACT_TOKEN_ADDRESS = 'YOUR_ABSTRACT_TOKEN_ADDRESS'; // Replace with actual token address
+
+    // Uniswap Router ABI (minimal version for swap)
+    const ROUTER_ABI = [
+        'function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable returns (uint[] memory amounts)',
+        'function swapExactTokensForETH(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline) external returns (uint[] memory amounts)',
+        'function WETH() external pure returns (address)'
+    ];
+
+    // ERC20 Token ABI (minimal version)
+    const ERC20_ABI = [
+        'function approve(address spender, uint256 amount) external returns (bool)',
+        'function allowance(address owner, address spender) external view returns (uint256)'
+    ];
+
+    let provider, signer, router, abstractToken;
+
+    async function initializeContracts() {
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        signer = provider.getSigner();
+        router = new ethers.Contract(UNISWAP_ROUTER_ADDRESS, ROUTER_ABI, signer);
+        abstractToken = new ethers.Contract(ABSTRACT_TOKEN_ADDRESS, ERC20_ABI, signer);
+    }
+
+    async function performSwap() {
+        if (typeof window.ethereum === 'undefined') {
+            alert('Please install MetaMask to use this feature');
+            return;
+        }
+
+        try {
+            await initializeContracts();
+            
+            // Request account access
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            const account = accounts[0];
+            
+            // Get input values
+            const ethAmount = document.getElementById('ethInput').value;
+            const abstractAmount = document.getElementById('abstractInput').value;
+            
+            if (!ethAmount && !abstractAmount) {
+                alert('Please enter an amount');
+                return;
+            }
+
+            const deadline = Math.floor(Date.now() / 1000) + 60 * 20; // 20 minutes from now
+            const wethAddress = await router.WETH();
+            
+            if (ethAmount > 0) {
+                // ETH to Abstract Token swap
+                const path = [wethAddress, ABSTRACT_TOKEN_ADDRESS];
+                const amountOutMin = 0; // In production, calculate this based on price impact
+                
+                const tx = await router.swapExactETHForTokens(
+                    amountOutMin,
+                    path,
+                    account,
+                    deadline,
+                    { value: ethers.utils.parseEther(ethAmount) }
+                );
+                
+                await tx.wait();
+                alert('Swap completed successfully!');
+            } else {
+                // Abstract Token to ETH swap
+                const path = [ABSTRACT_TOKEN_ADDRESS, wethAddress];
+                const amountIn = ethers.utils.parseEther(abstractAmount);
+                const amountOutMin = 0; // In production, calculate this based on price impact
+                
+                // First approve router to spend tokens
+                const allowance = await abstractToken.allowance(account, UNISWAP_ROUTER_ADDRESS);
+                if (allowance.lt(amountIn)) {
+                    const approveTx = await abstractToken.approve(UNISWAP_ROUTER_ADDRESS, amountIn);
+                    await approveTx.wait();
+                }
+                
+                const tx = await router.swapExactTokensForETH(
+                    amountIn,
+                    amountOutMin,
+                    path,
+                    account,
+                    deadline
+                );
+                
+                await tx.wait();
+                alert('Swap completed successfully!');
+            }
+            
+        } catch (error) {
+            console.error(error);
+            alert('An error occurred during the swap: ' + error.message);
+        }
+    }
+</script>
+
+<style>
+    .connect-wallet {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 10px 20px;
+        border-radius: 12px;
+        border: none;
+        background: #E8006F;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .connect-wallet:hover {
+        background: #d1006a;
+    }
+</style>
+
+<button class="connect-wallet" onclick="connectWallet()">Connect Wallet</button>
+
+<script>
+    async function connectWallet() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const accounts = await window.ethereum.request({ 
+                    method: 'eth_requestAccounts' 
+                });
+                const account = accounts[0];
+                document.querySelector('.connect-wallet').textContent = 
+                    account.slice(0, 6) + '...' + account.slice(-4);
+            } else {
+                alert('Please install MetaMask to use this feature');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Failed to connect wallet: ' + error.message);
+        }
+    }
+</script>
