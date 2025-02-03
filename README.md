@@ -2,7 +2,7 @@
     <img src="https://mintlify.s3-us-west-1.amazonaws.com/abstract/images/Block.svg" width="700px" alt="abstract banner"/>
     <br />
     <h1>Abstract Examples</h1>
-    <p align="center">Cloneable starter templates & example repos to help kickstart your next project on Abstract.
+    <p align="center">Cloneable starter templates & example repos to help kickstart your next project on Abstract.</p> 
 </div>
 
 <br/>
@@ -26,5 +26,5 @@ Within each directory, you'll find a `README.md` file with instructions on how t
 | [Paymaster Smart Contract](https://github.com/Abstract-Foundation/examples/tree/main/paymasters)                                      | Build and deploy a paymaster smart contract that can sponsor the gas fees of transactions for other accounts on Abstract.           |
 | [Smart Contract Account](https://github.com/Abstract-Foundation/examples/tree/main/smart-contract-accounts)                           | Build your own basic smart contract wallet and submit transactions from it to use Abstract's native account abstraction.            |
 | [Smart Contract Account (with Viem)](https://github.com/Abstract-Foundation/examples/tree/main/smart-contract-accounts-viem)          | Build your own basic smart contract wallet and submit transactions from it to use Abstract's native account abstraction using Viem. |
-| [Smart Contract Account Factory](https://github.com/Abstract-Foundation/examples/tree/main/smart-contract-accounts-factory)           | Build a factory smart contract that can create smart contract accounts that have a single EOA signer.                               |
+| [Smart Contract Account Factory](https://github.com/Abstract-Foundation/examples/tree/main/smart-contract-account-factory)           | Build a factory smart contract that can create smart contract accounts that have a single EOA signer.                               |
 | [Session Keys](https://github.com/Abstract-Foundation/examples/tree/main/session-keys)                                                | Create and use temporary session keys with Abstract Global Wallet to execute pre-defined actions without repeated signing.           |
