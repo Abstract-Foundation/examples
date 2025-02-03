@@ -18,7 +18,7 @@ This example consists of two components:
 
 ### Contract Development
 
-1. Change directory to the `contracts` folder.
+1. Change the directory to the `contracts` folder.
 
    ```bash
    cd contracts
@@ -55,7 +55,7 @@ npm install
 
 ### Frontend Development
 
-1. Change directory to the `frontend` folder.
+1. Change the directory to the `frontend` folder.
 
    ```bash
    # if you are in the contracts folder
