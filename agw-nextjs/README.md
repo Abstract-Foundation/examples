@@ -1,6 +1,6 @@
 # Abstract Global Wallet with Next.js
 
-This example showcases how to use the Abstract Global Wallet react SDK inside a [Next.js](https://nextjs.org/) application.
+This example demonstrates how to use the Abstract Global Wallet react SDK inside a [Next.js](https://nextjs.org/) application.
 
 ## Local Development
 
