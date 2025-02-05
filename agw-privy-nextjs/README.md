@@ -1,6 +1,6 @@
 # Abstract Global Wallet with Privy
 
-This example showcases how to use the Abstract Global Wallet react
+This example demonstrates how to use the Abstract Global Wallet react
 SDK with [Privy](https://privy.io/) inside a [Next.js](https://nextjs.org/) application.
 
 ## Local Development

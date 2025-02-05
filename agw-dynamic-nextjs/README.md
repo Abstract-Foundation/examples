@@ -1,6 +1,6 @@
 # Abstract Global Wallet with Dynamic
 
-This example showcases how to use the Abstract Global Wallet react
+This example demonstrates how to use the Abstract Global Wallet react
 SDK with [Dynamic](https://www.dynamic.xyz/) inside a [Next.js](https://nextjs.org/) application.
 
 ## Local Development
