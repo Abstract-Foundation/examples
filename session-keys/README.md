@@ -1,6 +1,6 @@
 # Abstract Global Wallet Session Keys
 
-This example showcases how to use [session keys](https://docs.abs.xyz/abstract-global-wallet/agw-client/session-keys/overview) with the Abstract Global Wallet  - temporary keys that are approved to execute a pre-defined set of actions without the need for the owner to sign each transaction.
+This example demonstrates how to use [session keys](https://docs.abs.xyz/abstract-global-wallet/agw-client/session-keys/overview) with the Abstract Global Wallet  - temporary keys that are approved to execute a pre-defined set of actions without the need for the owner to sign each transaction.
 
 ## Local Development
 
