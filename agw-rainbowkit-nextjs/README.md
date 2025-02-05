@@ -1,6 +1,6 @@
 # Abstract Global Wallet with RainbowKit
 
-This example showcases how to use the Abstract Global Wallet react
+This example demonstrates how to use the Abstract Global Wallet react
 SDK with [RainbowKit](https://www.rainbowkit.com/) inside a [Next.js](https://nextjs.org/) application.
 
 ## Local Development
