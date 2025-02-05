@@ -1,6 +1,6 @@
 # Abstract Global Wallet Session Keys
 
-This example demonstrates how to use [session keys](https://docs.abs.xyz/abstract-global-wallet/agw-client/session-keys/overview) with the Abstract Global Wallet  - temporary keys that are approved to execute a pre-defined set of actions without the need for the owner to sign each transaction.
+This example demonstrates how to use [session keys](https://docs.abs.xyz/abstract-global-wallet/agw-client/session-keys/overview) with the Abstract Global Wallet  - temporary keys that can execute a predefined set of actions without the need for the owner to sign each transaction.
 
 ## Local Development
 
@@ -10,13 +10,13 @@ This example demonstrates how to use [session keys](https://docs.abs.xyz/abstrac
    mkdir -p session-keys && curl -L https://codeload.github.com/Abstract-Foundation/examples/tar.gz/main | tar -xz --strip=2 -C session-keys examples-main/session-keys && cd session-keys
    ```
 
-2. Install dependencies
+2. Install the dependencies
 
    ```bash
    pnpm install
    ```
 
-3. Run the development server
+3. Start the development server
 
    ```bash
    pnpm dev
@@ -30,7 +30,7 @@ The example demonstrates three main components:
 
 1. **Wallet Connection**: Users can connect their wallet using the Abstract Global Wallet SDK.
 
-2. **Session Creation**: Once connected, users can create a session key with specific permissions:
+2. **Session Creation**: After connecting, users can create a session key with specific permissions:
    - Time-limited access (24 hour expiry)
    - Limited to specific contract interactions (NFT minting)
    - Maximum fee limits for transactions
