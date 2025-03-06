@@ -1,6 +1,7 @@
 "use client";
 
 import { AbstractWalletProvider } from "@abstract-foundation/agw-react";
+import { abstractTestnet } from "wagmi/chains";
 
 export default function AbstractWalletWrapper({
   children,
@@ -8,7 +9,7 @@ export default function AbstractWalletWrapper({
   children: React.ReactNode;
 }) {
   return (
-    <AbstractWalletProvider config={{ testnet: true }}>
+    <AbstractWalletProvider chain={abstractTestnet}>
       {children}
     </AbstractWalletProvider>
   );
