@@ -1,5 +1,5 @@
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
-import { Address, toFunctionSelector } from "viem";
+import { Address, parseEther, toFunctionSelector } from "viem";
 import {
   LimitType,
   SessionConfig,
@@ -48,62 +48,28 @@ export const createAndStoreSession = async (
   if (!userAddress) return null;
 
   try {
-    const factoryAddress = "0x1234567890123456789012345678901234567890"; // Replace with actual factory address from chain config
-
     const sessionPrivateKey = generatePrivateKey();
     const sessionSigner = privateKeyToAccount(sessionPrivateKey);
-    const maxBigInt = BigInt(
-      "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
-    );
-    const almostMaxBigInt = maxBigInt - BigInt(1);
 
     const { session } = await createSessionAsync({
       session: {
         signer: sessionSigner.address,
-        expiresAt: BigInt(Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30), // 30 days
+        expiresAt: BigInt(Math.floor(Date.now() / 1000) + 60 * 60 * 24),
         feeLimit: {
           limitType: LimitType.Lifetime,
-          limit: almostMaxBigInt,
+          limit: parseEther("1"),
           period: BigInt(0),
         },
         callPolicies: [
           {
-            target: factoryAddress,
-            selector: toFunctionSelector(
-              "buy(address,uint256) external payable"
-            ),
+            target: "0xC4822AbB9F05646A9Ce44EFa6dDcda0Bf45595AA", // NFT contract
+            selector: toFunctionSelector("mint(address,uint256)"),
             valueLimit: {
               limitType: LimitType.Unlimited,
-              limit: almostMaxBigInt,
+              limit: BigInt(0),
               period: BigInt(0),
             },
-            maxValuePerUse: almostMaxBigInt,
-            constraints: [],
-          },
-          {
-            target: factoryAddress,
-            selector: toFunctionSelector(
-              "sell(address,uint112,uint112) external payable"
-            ),
-            valueLimit: {
-              limitType: LimitType.Unlimited,
-              limit: almostMaxBigInt,
-              period: BigInt(0),
-            },
-            maxValuePerUse: almostMaxBigInt,
-            constraints: [],
-          },
-          {
-            target: factoryAddress,
-            selector: toFunctionSelector(
-              "deployToken(address,address,string,string,uint256,string,string,bytes32) external payable"
-            ),
-            valueLimit: {
-              limitType: LimitType.Unlimited,
-              limit: almostMaxBigInt,
-              period: BigInt(0),
-            },
-            maxValuePerUse: almostMaxBigInt,
+            maxValuePerUse: BigInt(0),
             constraints: [],
           },
         ],
