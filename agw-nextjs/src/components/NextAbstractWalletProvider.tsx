@@ -9,7 +9,7 @@ export default function AbstractWalletWrapper({
   children: React.ReactNode;
 }) {
   return (
-    <AbstractWalletProvider config={{ chain: abstractTestnet }}>
+    <AbstractWalletProvider chain={abstractTestnet}>
       {children}
     </AbstractWalletProvider>
   );
