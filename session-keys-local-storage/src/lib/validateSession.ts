@@ -1,12 +1,10 @@
-import { SESSION_KEY_VALIDATOR, SESSION_VALIDATOR_ABI } from "./constants";
 import { clearStoredSession } from "./clearStoredSession";
 import { createAndStoreSession } from "./createAndStoreSession";
-import { createPublicClient } from "viem";
-import { http } from "viem";
 import { SupportedChain } from "@/config/chain";
+import { abstractTestnet } from "viem/chains";
+import type { AbstractClient } from "@abstract-foundation/agw-client";
 import type { Address } from "viem";
 import type { SessionConfig } from "@abstract-foundation/agw-client/sessions";
-import { abstractTestnet } from "viem/chains";
 
 /**
  * @function validateSession
@@ -30,26 +28,17 @@ import { abstractTestnet } from "viem/chains";
  *                            the session is valid (true) or not (false)
  */
 export const validateSession = async (
+  abstractClient: AbstractClient,
   address: Address,
-  sessionHash: string,
+  sessionHash: `0x${string}`,
   chain: SupportedChain,
   createSessionAsync: (params: {
     session: SessionConfig;
   }) => Promise<{ transactionHash?: `0x${string}`; session: SessionConfig }>
 ): Promise<boolean> => {
-  console.log("Validating session for address:", address);
-  const publicClient = createPublicClient({
-    chain: chain,
-    transport: http(),
-  });
 
   try {
-    const status = (await publicClient.readContract({
-      address: SESSION_KEY_VALIDATOR as `0x${string}`,
-      abi: SESSION_VALIDATOR_ABI,
-      functionName: "sessionStatus",
-      args: [address as `0x${string}`, sessionHash],
-    })) as SessionStatus;
+    const status = await abstractClient.getSessionStatus(sessionHash);
 
     console.log("status", status);
     console.log("chain", chain);

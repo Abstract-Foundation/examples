@@ -2,6 +2,7 @@ import {
   getSessionHash,
   SessionConfig,
 } from "@abstract-foundation/agw-client/sessions";
+import { AbstractClient } from "@abstract-foundation/agw-client";
 import { LOCAL_STORAGE_KEY_PREFIX } from "./constants";
 import { getEncryptionKey } from "./getEncryptionKey";
 import { decrypt } from "./decryptSession";
@@ -36,6 +37,7 @@ import type { Address } from "viem";
  * - privateKey: The private key for the session signer
  */
 export const getStoredSession = async (
+  abstractClient: AbstractClient,
   address: Address,
   chain: SupportedChain,
   createSessionAsync: (params: {
@@ -55,7 +57,7 @@ export const getStoredSession = async (
     const decryptedData = await decrypt(encryptedData, key);
     const parsedData = JSON.parse(decryptedData);
     const sessionHash = getSessionHash(parsedData.session);
-    await validateSession(address, sessionHash, chain, createSessionAsync);
+    await validateSession(abstractClient, address, sessionHash, chain, createSessionAsync);
     return parsedData;
   } catch (error) {
     console.error("Failed to decrypt session:", error);

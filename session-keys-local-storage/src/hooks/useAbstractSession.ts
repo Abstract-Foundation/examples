@@ -1,11 +1,10 @@
 import { useAccount } from "wagmi";
-import { useCreateSession } from "@abstract-foundation/agw-react";
+import { useCreateSession, useAbstractClient } from "@abstract-foundation/agw-react";
 import { getStoredSession } from "../lib/getStoredSession";
 import { validateSession } from "../lib/validateSession";
 import { createAndStoreSession } from "../lib/createAndStoreSession";
 import { clearStoredSession } from "../lib/clearStoredSession";
 import type { SupportedChain } from "@/config/chain";
-
 /**
  * @function useAbstractSession
  * @description React hook for managing Abstract Global Wallet sessions in local storage
@@ -37,8 +36,9 @@ import type { SupportedChain } from "@/config/chain";
 export const useAbstractSession = (chain: SupportedChain) => {
   const { address } = useAccount();
   const { createSessionAsync } = useCreateSession();
+  const { data: client } = useAbstractClient();
 
-  if (!address)
+  if (!address || !client)
     return {
       getStoredSession: () => null,
       validateSession: () => null,
@@ -48,9 +48,9 @@ export const useAbstractSession = (chain: SupportedChain) => {
 
   return {
     getStoredSession: () =>
-      getStoredSession(address, chain, createSessionAsync),
-    validateSession: (sessionHash: string) =>
-      validateSession(address, sessionHash, chain, createSessionAsync),
+      getStoredSession(client, address, chain, createSessionAsync),
+    validateSession: (sessionHash: `0x${string}`) =>
+      validateSession(client, address, sessionHash, chain, createSessionAsync),
     createAndStoreSession: () =>
       createAndStoreSession(address, createSessionAsync),
     clearStoredSession: () => clearStoredSession(address),
