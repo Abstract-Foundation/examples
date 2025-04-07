@@ -137,6 +137,10 @@ export function LinkedAccounts() {
           />
         </svg>
       </a>
+
+      <p className="text-xs text-gray-500 mt-4 text-center w-full">
+        Checking Abstract Testnet
+      </p>
     </div>
   );
 }
