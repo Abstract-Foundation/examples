@@ -24,7 +24,7 @@ const metadata = {
   ],
 };
 
-// Create the modal
+// @ts-ignore - Modal is used
 const modal = createAppKit({
   adapters: [wagmiAdapter],
   projectId,
