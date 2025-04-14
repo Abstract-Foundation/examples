@@ -10,7 +10,7 @@ This example showcases how to use the Abstract Global Wallet react SDK with [Wal
 
    ```bash
    # .env.local
-   WALLET_CONNECT_PROJECT_ID=your-reown-app-id
+   NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=your-reown-app-id
    ```
 
 3. Get a copy of the `agw-walletconnect-nextjs` example directory from the Abstract Examples repository:
