@@ -9,6 +9,7 @@ import { decrypt } from "./decryptSession";
 import { validateSession } from "./validateSession";
 import { SupportedChain } from "@/config/chain";
 import type { Address } from "viem";
+import { DEFAULT_CALL_POLICIES } from "./createAndStoreSession";
 
 /**
  * @function getStoredSession
@@ -56,6 +57,18 @@ export const getStoredSession = async (
     const key = await getEncryptionKey(address);
     const decryptedData = await decrypt(encryptedData, key);
     const parsedData = JSON.parse(decryptedData);
+    // IF DEFAULT_CALL_POLICIES have changed we return null
+    if (
+      JSON.stringify(parsedData.session.callPolicies, (_, value) =>
+        typeof value === "bigint" ? value.toString() : value
+      ) !== 
+      JSON.stringify(DEFAULT_CALL_POLICIES, (_, value) =>
+        typeof value === "bigint" ? value.toString() : value
+      )
+    ) {
+      return null;
+    }
+
     const sessionHash = getSessionHash(parsedData.session);
     await validateSession(abstractClient, address, sessionHash, chain, createSessionAsync);
     return parsedData;

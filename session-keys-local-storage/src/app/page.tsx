@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useAbstractSession } from "@/hooks/useAbstractSession";
-import { useAccount } from "wagmi";
+import { useAccount, useDisconnect } from "wagmi";
 import styles from "./page.module.css";
 import LoginWithAGW from "@/components/LoginWithAGW";
 import chain from "@/config/chain";
+import { useAbstractClient } from "@abstract-foundation/agw-react";
 
 /**
  * Home Component
@@ -23,12 +24,14 @@ import chain from "@/config/chain";
  */
 export default function Home() {
   const { address, isConnected } = useAccount();
+  const { disconnect } = useDisconnect();
   const { getStoredSession, createAndStoreSession, clearStoredSession } =
     useAbstractSession(chain);
 
   const [sessionData, setSessionData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [statusMessage, setStatusMessage] = useState<string>("");
+  const { data: client } = useAbstractClient();
 
   // Check for an existing session when the component mounts or wallet connects
   useEffect(() => {
@@ -40,7 +43,7 @@ export default function Home() {
         "Please connect your Abstract Global Wallet to use session keys"
       );
     }
-  }, [isConnected]);
+  }, [isConnected, client?.account?.address]); // we must wait for the client to be connected
 
   /**
    * Checks if there's an existing session stored in local storage
@@ -107,6 +110,14 @@ export default function Home() {
         `Error: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
+  };
+
+  /**
+   * Handles user logout by disconnecting wallet
+   */
+  const handleLogout = () => {
+    disconnect();
+    setStatusMessage("Logged out successfully");
   };
 
   /**
@@ -191,6 +202,14 @@ export default function Home() {
                 disabled={isLoading || !sessionData}
               >
                 Clear Session
+              </button>
+              
+              <button
+                className={styles.button}
+                onClick={handleLogout}
+                disabled={isLoading}
+              >
+                Logout
               </button>
             </div>
 
