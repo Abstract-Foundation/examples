@@ -39,7 +39,7 @@ export default async function () {
     await loadFundsToAccount(CONTRACT_ADDRESS, parseEther("0.001"));
   }
 
-  // Create a transaction object to send "from" the smart smart contract account
+  // Create a transaction object to send "from" the smart contract account
   const transaction = await signer.populateTransaction({
     nonce: nonce, // You may need to change this if you're sending multiple transactions.
     to: Wallet.createRandom().address, // As an example, let's send money to another random wallet for our tx.
