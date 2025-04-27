@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useAbstractSession } from "@/hooks/useAbstractSession";
-import { useAccount, useDisconnect } from "wagmi";
+import { useAccount } from "wagmi";
 import styles from "./page.module.css";
 import LoginWithAGW from "@/components/LoginWithAGW";
 import chain from "@/config/chain";
