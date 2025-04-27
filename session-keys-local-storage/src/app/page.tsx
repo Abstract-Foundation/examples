@@ -6,7 +6,7 @@ import { useAccount, useDisconnect } from "wagmi";
 import styles from "./page.module.css";
 import LoginWithAGW from "@/components/LoginWithAGW";
 import chain from "@/config/chain";
-import { useAbstractClient } from "@abstract-foundation/agw-react";
+import { useAbstractClient, useLoginWithAbstract } from "@abstract-foundation/agw-react";
 
 /**
  * Home Component
@@ -24,7 +24,7 @@ import { useAbstractClient } from "@abstract-foundation/agw-react";
  */
 export default function Home() {
   const { address, isConnected } = useAccount();
-  const { disconnect } = useDisconnect();
+  const { logout } = useLoginWithAbstract();
   const { getStoredSession, createAndStoreSession, clearStoredSession } =
     useAbstractSession(chain);
 
@@ -116,8 +116,7 @@ export default function Home() {
    * Handles user logout by disconnecting wallet
    */
   const handleLogout = () => {
-    disconnect();
-    setStatusMessage("Logged out successfully");
+    logout();
   };
 
   /**
