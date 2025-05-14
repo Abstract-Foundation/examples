@@ -62,16 +62,25 @@ export function SendTransaction() {
         <span className="w-full text-center">Submit tx</span>
       </button>
 
-      {transactionReceipt && (
+      {transactionHash && (
         <div className="mt-4 p-4 bg-white/5 border border-white/10 rounded-lg text-center w-full">
           <div className="flex flex-col items-center gap-2">
             <p className="text-sm sm:text-base font-medium font-[family-name:var(--font-roobert)]">
-              Transaction Success
-              <span className="ml-1 text-green-500">✅</span>
+              {transactionReceipt ? (
+                <>
+                  Transaction Success
+                  <span className="ml-1 text-green-500">✅</span>
+                </>
+              ) : (
+                <>
+                  Transaction Pending
+                  <span className="ml-1 text-yellow-500">⏳</span>
+                </>
+              )}
             </p>
 
             <a
-              href={`https://sepolia.abscan.org/tx/${transactionReceipt.transactionHash}`}
+              href={`https://sepolia.abscan.org/tx/${transactionReceipt?.transactionHash}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm text-blue-400 hover:text-blue-300 underline"
