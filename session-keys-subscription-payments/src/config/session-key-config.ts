@@ -3,6 +3,7 @@ import {
   type SessionConfig,
 } from "@abstract-foundation/agw-client/sessions";
 import { parseEther, toFunctionSelector } from "viem";
+import { SUBSCRIPTION_CONTRACT_ADDRESS } from "./contracts";
 
 /**
  * Default call policies for session keys
@@ -10,14 +11,14 @@ import { parseEther, toFunctionSelector } from "viem";
  */
 export const DEFAULT_CALL_POLICIES = [
   {
-    target: "0xC4822AbB9F05646A9Ce44EFa6dDcda0Bf45595AA" as `0x${string}`, // NFT contract
-    selector: toFunctionSelector("mint(address,uint256)"),
+    target: SUBSCRIPTION_CONTRACT_ADDRESS, // Subscription contract
+    selector: toFunctionSelector("subscribe()"),
     valueLimit: {
-      limitType: LimitType.Unlimited,
-      limit: BigInt(0),
-      period: BigInt(0),
+      limitType: LimitType.Allowance,
+      limit: BigInt(parseEther("0.0001")), // Subscription fee
+      period: BigInt(15 * 60), // 15 minutes
     },
-    maxValuePerUse: BigInt(0),
+    maxValuePerUse: BigInt(parseEther("0.0001")), // Max value per call is the subscription fee
     constraints: [],
   },
 ];

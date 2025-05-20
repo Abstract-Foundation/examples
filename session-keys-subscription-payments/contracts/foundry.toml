@@ -1,0 +1,11 @@
+[profile.default]
+src = 'src'
+libs = ['lib']
+fallback_oz = true
+
+[profile.default.zksync]
+enable_eravm_extensions = true # Note: System contract calls (NonceHolder and ContractDeployer) can only be called with this set to true
+
+[etherscan]
+abstractTestnet = { chain = "11124", url = "", key = ""} # You can replace these values or leave them blank to override via CLI
+abstractMainnet = { chain = "2741", url = "", key = ""} # You can replace these values or leave them blank to override via CLI

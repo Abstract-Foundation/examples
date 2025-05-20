@@ -1,4 +1,7 @@
-import { getSessionHash } from "@abstract-foundation/agw-client/sessions";
+import {
+  getSessionHash,
+  SessionConfig,
+} from "@abstract-foundation/agw-client/sessions";
 import { AbstractClient } from "@abstract-foundation/agw-client";
 import { LOCAL_STORAGE_KEY_PREFIX } from "./constants";
 import { getEncryptionKey } from "./getEncryptionKey";
@@ -34,7 +37,10 @@ import { DEFAULT_CALL_POLICIES } from "@/config/session-key-config";
 export const getStoredSession = async (
   abstractClient: AbstractClient,
   address: Address
-): Promise<object | null> => {
+): Promise<{
+  session: SessionConfig;
+  privateKey: `0x${string}`;
+} | null> => {
   console.log("Getting stored session for address:", address);
   if (!address) return null;
 
@@ -46,7 +52,13 @@ export const getStoredSession = async (
   try {
     const key = await getEncryptionKey(address);
     const decryptedData = await decrypt(encryptedData, key);
-    const parsedData = JSON.parse(decryptedData);
+    const parsedData = JSON.parse(decryptedData, (key, value) => {
+      // Check if the value is a string that looks like a number (only digits)
+      if (typeof value === "string" && /^\d+$/.test(value)) {
+        return BigInt(value);
+      }
+      return value;
+    });
     // IF DEFAULT_CALL_POLICIES have changed we return null
     if (
       JSON.stringify(parsedData.session.callPolicies, (_, value) =>
