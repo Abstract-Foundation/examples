@@ -15,7 +15,6 @@ export const useTokenBalance = () => {
     const { address } = useAccount();
     const [balance, setBalance] = useState<bigint | undefined>();
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<Error | null>(null);
     
     const { data: initialBalance } = useReadContract({ 
         abi: erc20Abi, 
@@ -71,8 +70,6 @@ export const useTokenBalance = () => {
     return {
         data: balance,
         isLoading,
-        error,
-        isError: !!error,
     };
 };
 
