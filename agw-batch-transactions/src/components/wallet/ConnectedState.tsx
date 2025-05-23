@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAccount } from "wagmi";
 import { useLoginWithAbstract } from "@abstract-foundation/agw-react";
 import { useTokenBalance } from "@/hooks/useTokenBalance";
@@ -7,12 +7,20 @@ import { formatEther } from "viem";
 import { useCounterStats } from "@/hooks/useCounterStats";
 import { IncrementCounter } from "./IncrementCounter";
 import { StatDisplay } from "./StatDisplay";
+import { TransactionStatus } from "./TransactionStatus";
+
+interface TransactionState {
+  transactionHash: `0x${string}` | undefined;
+  isSuccess: boolean;
+  explorerUrl?: string | undefined;
+}
 
 export function ConnectedState() {
   const { address } = useAccount();
   const { logout } = useLoginWithAbstract();
   const { data: tokenBalance } = useTokenBalance();
   const { data: counterStats } = useCounterStats();
+  const [transactionState, setTransactionState] = useState<TransactionState | null>(null);
 
   if (!address || !counterStats) return null;
 
@@ -73,10 +81,22 @@ export function ConnectedState() {
               </svg>
               Disconnect
             </button>
-            <MintToken />
-            <IncrementCounter price={counterStats?.price ?? BigInt(0)} />
+            <MintToken onTransactionUpdate={setTransactionState} />
+            <IncrementCounter 
+              price={counterStats?.price ?? BigInt(0)} 
+              onTransactionUpdate={setTransactionState}
+            />
           </div>
         </div>
+
+        {/* Transaction Status */}
+        {transactionState && (
+          <TransactionStatus
+            transactionHash={transactionState.transactionHash}
+            isSuccess={transactionState.isSuccess}
+            explorerUrl={transactionState.explorerUrl}
+          />
+        )}
       </div>
     </div>
   );

@@ -2,19 +2,43 @@ import { erc20Abi, parseAbi } from "viem";
 import { tokenAddress } from "@/app/constants";
 import { useSendCalls, useWaitForCallsStatus } from "wagmi/experimental";
 import { useAccount } from "wagmi";
-import { TransactionStatus } from "./TransactionStatus";
 import { useEffect } from "react";
 
-export function MintToken() {
+interface MintTokenProps {
+  onTransactionUpdate: (state: {
+    transactionHash: `0x${string}` | undefined;
+    isSuccess: boolean;
+    explorerUrl?: string | undefined;
+  } | null) => void;
+}
+
+interface BundleData {
+  id: `0x${string}`;
+}
+
+export function MintToken({ onTransactionUpdate }: MintTokenProps) {
   const { address } = useAccount();
   const { sendCalls, data: bundle, isPending } = useSendCalls();
 
   const { data: callReceipts, status } = useWaitForCallsStatus({
-    id: (bundle as any)?.id,
+    id: (bundle as unknown as BundleData)?.id,
     query: {
       enabled: bundle !== undefined,
     },
   });
+
+  useEffect(() => {
+    const bundleData = bundle as unknown as BundleData | undefined;
+    if (bundleData?.id) {
+      onTransactionUpdate({
+        transactionHash: bundleData.id,
+        isSuccess: (callReceipts as any)?.statusCode === 200,
+        explorerUrl: callReceipts?.receipts?.[0]?.transactionHash,
+      });
+    } else {
+      onTransactionUpdate(null);
+    }
+  }, [bundle, callReceipts, onTransactionUpdate]);
 
   const onSubmitTransaction = () => {
     if (!address) return;
@@ -59,12 +83,6 @@ export function MintToken() {
         </svg>
         <span className="w-full text-center">Mint Tokens</span>
       </button>
-
-      <TransactionStatus
-        transactionHash={(bundle as any)?.id}
-        isSuccess={(callReceipts as any)?.statusCode === 200}
-        explorerUrl={callReceipts?.receipts?.[0]?.transactionHash}
-      />
     </div>
   );
 }

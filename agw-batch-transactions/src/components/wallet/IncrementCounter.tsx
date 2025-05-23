@@ -2,28 +2,47 @@ import { erc20Abi } from "viem";
 import { counterAbi, counterAddress, tokenAddress } from "@/app/constants";
 import { useSendCalls, useWaitForCallsStatus } from "wagmi/experimental";
 import { useAccount } from "wagmi";
-import { TransactionStatus } from "./TransactionStatus";
-import { call } from "viem/actions";
 import { useEffect } from "react";
+
+interface IncrementCounterProps {
+  price: bigint;
+  onTransactionUpdate: (state: {
+    transactionHash: `0x${string}` | undefined;
+    isSuccess: boolean;
+    explorerUrl?: string | undefined;
+  } | null) => void;
+}
+
+interface BundleData {
+  id: `0x${string}`;
+}
 
 export function IncrementCounter({
   price,
-}: {
-  price: bigint;
-}) {
+  onTransactionUpdate,
+}: IncrementCounterProps) {
   const { address } = useAccount();
   const { sendCalls, data: bundle, isPending } = useSendCalls();
 
   const { data: callReceipts, status } = useWaitForCallsStatus({
-    id: (bundle as any)?.id,
+    id: (bundle as unknown as BundleData)?.id,
     query: {
       enabled: bundle !== undefined,
     },
   });
 
   useEffect(() => {
-    console.log(callReceipts);
-  }, [callReceipts]);
+    const bundleData = bundle as unknown as BundleData | undefined;
+    if (bundleData?.id) {
+      onTransactionUpdate({
+        transactionHash: bundleData.id,
+        isSuccess: (callReceipts as any)?.statusCode === 200,
+        explorerUrl: callReceipts?.receipts?.[0]?.transactionHash,
+      });
+    } else {
+      onTransactionUpdate(null);
+    }
+  }, [bundle, callReceipts, onTransactionUpdate]);
 
   const onSubmitTransaction = () => {
     if (!address) return;
@@ -74,12 +93,6 @@ export function IncrementCounter({
         </svg>
         <span className="w-full text-center">Increment Counter</span>
       </button>
-
-      <TransactionStatus
-        transactionHash={(bundle as any)?.id}
-        isSuccess={(callReceipts as any)?.statusCode === 200}
-        explorerUrl={callReceipts?.receipts?.[0]?.transactionHash}
-      />
     </div>
   );
 }
