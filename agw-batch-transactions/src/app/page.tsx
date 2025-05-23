@@ -24,6 +24,7 @@ export default function Home() {
             quality={100}
             priority
           />
+          <h1 className="text-2xl font-[family-name:var(--font-roobert)]">Batch Transactions</h1>
           <p className="text-md font-[family-name:var(--font-roobert)]">
             Get started by editing{" "}
             <code className="bg-white/[.06] px-1 py-0.5 rounded font-semibold">
