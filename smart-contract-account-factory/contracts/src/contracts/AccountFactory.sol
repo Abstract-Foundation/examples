@@ -31,9 +31,9 @@ contract AccountFactory {
                 )
             );
         require(success, "Deployment failed");
-        emit AccountCreated(accountAddress, owner);
-
         (accountAddress) = abi.decode(returnData, (address));
+
+        emit AccountCreated(accountAddress, owner);
     }
 
     event AccountCreated(address indexed accountAddress, address indexed owner);
