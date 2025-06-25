@@ -33,3 +33,4 @@ This example showcases AGW's [Wallet Linking](https://docs.abs.xyz/abstract-glob
 - [GitHub](https://github.com/Abstract-Foundation)
 - [X](https://x.com/AbstractChain)
 - [Discord](https://discord.com/invite/abstractchain)
+- [YouTube](https://www.youtube.com/@AbstractBlockchain)
