@@ -1,0 +1,9 @@
+[submodule "contracts/lib/forge-std"]
+	path = contracts/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "contracts/lib/ExclusiveDelegateResolver"]
+	path = contracts/lib/ExclusiveDelegateResolver
+	url = https://github.com/yuga-labs/ExclusiveDelegateResolver
+[submodule "contracts/lib/solady"]
+	path = contracts/lib/solady
+	url = https://github.com/vectorized/solady
