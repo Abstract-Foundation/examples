@@ -1,0 +1,30 @@
+{
+  "name": "agw-vue",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@abstract-foundation/agw-client": "^1.8.6",
+    "@abstract-foundation/agw-web": "^1.8.6",
+    "@privy-io/cross-app-connect": "^0.2.2",
+    "buffer": "^6.0.3",
+    "mipd": "^0.0.7",
+    "viem": "^2.31.7",
+    "vue": "^3.5.17"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.0",
+    "@vue/tsconfig": "^0.7.0",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17",
+    "typescript": "~5.8.3",
+    "vite": "^7.0.4",
+    "vue-tsc": "^2.2.12"
+  }
+}
