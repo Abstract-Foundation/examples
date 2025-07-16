@@ -3,7 +3,6 @@ import { useWallet } from './composables/useWallet'
 import WalletConnect from './components/WalletConnect.vue'
 import ConnectedWallet from './components/ConnectedWallet.vue'
 import BackgroundEffects from './components/BackgroundEffects.vue'
-import ResourceCards from './components/ResourceCards.vue'
 
 const { address } = useWallet()
 </script>
@@ -33,7 +32,5 @@ const { address } = useWallet()
         <WalletConnect v-else />
       </div>
     </main>
-
-    <ResourceCards />
   </div>
 </template>
