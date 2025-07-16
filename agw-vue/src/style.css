@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Avenue Mono';
+  src: url('./assets/fonts/Avenue Mono.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roobert';
+  src: url('./assets/fonts/Roobert-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roobert';
+  src: url('./assets/fonts/Roobert-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roobert';
+  src: url('./assets/fonts/Roobert-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roobert';
+  src: url('./assets/fonts/Roobert-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roobert';
+  src: url('./assets/fonts/Roobert-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roobert';
+  src: url('./assets/fonts/Roobert-Heavy.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --font-avenue-mono: 'Avenue Mono', monospace;
+  --font-roobert: 'Roobert', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-roobert);
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
