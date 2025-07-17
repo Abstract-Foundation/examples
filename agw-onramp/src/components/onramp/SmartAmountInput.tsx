@@ -1,23 +1,18 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { type Currency } from '@/services/onramp';
 import { 
   formatAmountInput, 
-  formatFiatCurrency, 
-  formatCryptoCurrency,
+  formatFiatCurrency,
   getCurrencySymbol,
-  getPresetAmounts,
   isValidAmount,
-  parseAmount,
-  convertCurrency
+  parseAmount
 } from '@/utils/currencyUtils';
 
 interface SmartAmountInputProps {
   fiatCurrency: Currency; // The fiat currency the user will pay with (USD, EUR, etc.)
   cryptoCurrency: Currency; // The crypto currency they'll receive (ETH, USDC, etc.)
-  availableCryptos: Currency[]; // List of crypto options they can choose from
-  exchangeRate: number; // How much 1 unit of fiat equals in crypto (rough estimate)
   initialFiatAmount: number; // Starting amount to show in the input
   limits?: {
     currencyCode: string;
@@ -26,141 +21,207 @@ interface SmartAmountInputProps {
     maximumAmount: number; // Largest amount they can buy
   };
   onAmountChange: (fiatAmount: number, cryptoAmount: number) => void; // Called when user changes amount
-  onCryptoChange: (currency: Currency) => void; // Called when user picks different crypto
   onValidationChange?: (isValid: boolean) => void; // Called when validation status changes
 }
 
 export function SmartAmountInput({ 
   fiatCurrency, 
   cryptoCurrency,
-  availableCryptos,
-  exchangeRate, 
   initialFiatAmount,
   limits,
   onAmountChange,
-  onCryptoChange,
   onValidationChange
 }: SmartAmountInputProps) {
-  // Keep track of what the user has typed (as a string to preserve formatting)
-  const [inputValue, setInputValue] = useState(initialFiatAmount.toString());
+  // Store the raw numeric input (what user logically typed)
+  const [rawValue, setRawValue] = useState(initialFiatAmount.toString());
   
   // Any validation error message to show the user
   const [error, setError] = useState('');
   
-  // Reference to the input element so we can focus it
+  // Reference to the input element
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Update the input when the parent component changes the initial amount
-  // This happens when the user switches crypto currencies, for example
+  // Format the raw value for display
+  function formatForDisplay(value: string): string {
+    if (!value || value === '' || value === '.') {
+      return value;
+    }
+
+    const num = parseFloat(value);
+    if (isNaN(num)) {
+      return value; // Return as-is if not a valid number
+    }
+
+    // Format with commas and ensure 2 decimal places
+    return num.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
+  // Calculate cursor position in formatted string based on raw string position
+  function calculateFormattedCursorPosition(rawValue: string, rawCursorPos: number): number {
+    if (rawCursorPos === 0) return 1; // After the $
+    
+    // Get the part of raw value before cursor
+    const beforeCursor = rawValue.slice(0, rawCursorPos);
+    
+    // Format just the part before cursor
+    const num = parseFloat(beforeCursor);
+    if (isNaN(num)) {
+      return rawCursorPos + 1; // +1 for the $
+    }
+    
+    const formattedBefore = num.toLocaleString('en-US');
+    return formattedBefore.length + 1; // +1 for the $
+  }
+
+  // Calculate raw cursor position from formatted cursor position
+  function calculateRawCursorPosition(formattedValue: string, formattedCursorPos: number): number {
+    if (formattedCursorPos <= 1) return 0;
+    
+    // Remove $ and get the part before cursor
+    const withoutDollar = formattedValue.slice(1, formattedCursorPos);
+    
+    // Remove commas to get raw position
+    const rawBefore = withoutDollar.replace(/,/g, '');
+    return rawBefore.length;
+  }
+
+  // Update input when props change
   useEffect(() => {
-    setInputValue(initialFiatAmount.toString());
+    setRawValue(initialFiatAmount.toString());
   }, [initialFiatAmount, fiatCurrency.currencyCode]);
 
-  // Auto-focus the input when the component first loads for better UX
+  // Auto-focus the input
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }, []);
 
-  // This function converts between fiat and crypto amounts without validation callbacks
-  const convertAmount = useCallback((value: string) => {
-    // First check if it's a valid number
-    if (!isValidAmount(value)) {
+  // Validation function
+  const validateAmount = useCallback((value: string) => {
+    // Empty input is allowed
+    if (!value.trim()) {
+      setError('');
+      onValidationChange?.(false);
       return null;
     }
 
-    const amount = parseAmount(value);
-    const conversion = convertCurrency(amount, exchangeRate, fiatCurrency, cryptoCurrency);
-
-    // Check against the API's min/max limits for this currency
-    if (limits) {
-      if (conversion.fiatAmount < limits.minimumAmount) {
-        return null;
-      }
-      
-      if (conversion.fiatAmount > limits.maximumAmount) {
-        return null;
-      }
-    }
-
-    return conversion;
-  }, [exchangeRate, fiatCurrency, cryptoCurrency, limits]);
-
-  // This function validates the user's input and updates state/callbacks
-  const validateAndConvert = useCallback((value: string) => {
-    // First check if it's a valid number
+    // Check if it's a valid number format
     if (!isValidAmount(value)) {
       setError('Please enter a valid amount');
-      onValidationChange?.(false); // Tell parent the amount is invalid
+      onValidationChange?.(false);
       return null;
     }
 
-    const amount = parseAmount(value);
-    const conversion = convertCurrency(amount, exchangeRate, fiatCurrency, cryptoCurrency);
+    const numValue = parseAmount(value);
 
-    // Check against the API's min/max limits for this currency
+    // Check against limits
     if (limits) {
-      if (conversion.fiatAmount < limits.minimumAmount) {
+      if (numValue < limits.minimumAmount) {
         setError(`Minimum amount is ${formatFiatCurrency(limits.minimumAmount, fiatCurrency.currencyCode)}`);
         onValidationChange?.(false);
         return null;
       }
       
-      if (conversion.fiatAmount > limits.maximumAmount) {
+      if (numValue > limits.maximumAmount) {
         setError(`Maximum amount is ${formatFiatCurrency(limits.maximumAmount, fiatCurrency.currencyCode)}`);
         onValidationChange?.(false);
         return null;
       }
     }
 
-    // If we got here, the amount is valid
     setError('');
-    onValidationChange?.(true); // Tell parent the amount is valid
-    return conversion;
-  }, [exchangeRate, fiatCurrency, cryptoCurrency, limits, onValidationChange]);
+    onValidationChange?.(true);
+    return numValue;
+  }, [fiatCurrency, limits, onValidationChange]);
 
-  // Called when the user types in the input field
-  const handleInputChange = (value: string) => {
-    // Clean up the input (remove invalid characters, etc.)
-    const formatted = formatAmountInput(value);
-    setInputValue(formatted);
-
-    // Validate and convert the amount
-    const conversion = validateAndConvert(formatted);
-    if (conversion) {
-      // Tell the parent component about the new amounts
-      onAmountChange(conversion.fiatAmount, conversion.cryptoAmount);
-    }
-  };
-
-  // Called when the user picks a different crypto currency from the dropdown
-  const handleCryptoChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedCrypto = availableCryptos.find(crypto => crypto.currencyCode === event.target.value);
-    if (selectedCrypto) {
-      onCryptoChange(selectedCrypto);
-    }
-  };
-
-  // Called when the user clicks one of the preset amount buttons
-  const handlePresetAmount = (amount: number) => {
-    setInputValue(amount.toString());
+  // Handle input changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formattedValue = e.target.value;
+    const formattedCursorPos = e.target.selectionStart || 0;
     
-    // Validate the preset amount (it should always be valid, but just in case)
-    const conversion = validateAndConvert(amount.toString());
-    if (conversion) {
-      onAmountChange(conversion.fiatAmount, conversion.cryptoAmount);
+    // Remove $ symbol
+    let value = formattedValue.startsWith('$') ? formattedValue.slice(1) : formattedValue;
+    
+    // Remove commas and any non-numeric chars except decimal
+    value = value.replace(/[^0-9.]/g, '');
+    
+    // Handle multiple decimal points
+    const parts = value.split('.');
+    if (parts.length > 2) {
+      value = parts[0] + '.' + parts.slice(1).join('');
+    }
+    
+    // Limit decimal places to 2
+    if (parts.length === 2 && parts[1].length > 2) {
+      value = parts[0] + '.' + parts[1].slice(0, 2);
+    }
+    
+    setRawValue(value);
+    
+    // Calculate where cursor should be in raw value
+    const rawCursorPos = calculateRawCursorPosition(formattedValue, formattedCursorPos);
+    
+    // Format and restore cursor position
+    setTimeout(() => {
+      if (inputRef.current) {
+        const newFormattedPos = calculateFormattedCursorPosition(value, rawCursorPos);
+        inputRef.current.setSelectionRange(newFormattedPos, newFormattedPos);
+      }
+    }, 0);
+    
+    // Validate and notify parent
+    const amount = validateAmount(value);
+    if (amount !== null) {
+      onAmountChange(amount, 0);
     }
   };
 
-  // Calculate how much crypto the user will get for their fiat amount
-  // This is memoized to prevent excessive re-calculations as the user types
-  const equivalentCryptoAmount = useMemo(() => {
-    const conversion = convertAmount(inputValue);
-    if (!conversion) return '';
+  // Prevent cursor from moving before the $ symbol
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const input = e.target as HTMLInputElement;
+    const cursorPosition = input.selectionStart || 0;
     
-    return formatCryptoCurrency(conversion.cryptoAmount, cryptoCurrency.currencyCode);
-  }, [inputValue, cryptoCurrency, convertAmount]);
+    // Prevent left arrow key from moving cursor before $
+    if (e.key === 'ArrowLeft' && cursorPosition <= 1) {
+      e.preventDefault();
+    }
+    
+    // Prevent home key from moving cursor before $
+    if (e.key === 'Home') {
+      e.preventDefault();
+      input.setSelectionRange(1, 1);
+    }
+  };
+
+  // Prevent clicking before the $ symbol
+  const handleClick = (e: React.MouseEvent<HTMLInputElement>) => {
+    const input = e.target as HTMLInputElement;
+    setTimeout(() => {
+      const cursorPosition = input.selectionStart || 0;
+      if (cursorPosition < 1) {
+        input.setSelectionRange(1, 1);
+      }
+    }, 0);
+  };
+
+  // Prevent text selection from including the $ symbol
+  const handleSelect = (e: React.SyntheticEvent<HTMLInputElement>) => {
+    const input = e.target as HTMLInputElement;
+    setTimeout(() => {
+      const start = input.selectionStart || 0;
+      const end = input.selectionEnd || 0;
+      
+      if (start < 1) {
+        input.setSelectionRange(Math.max(1, start), Math.max(1, end));
+      }
+    }, 0);
+  };
+
+  const displayValue = formatForDisplay(rawValue);
 
   return (
     <div className="space-y-6">
@@ -174,56 +235,16 @@ export function SmartAmountInput({
           <input
             type="text"
             inputMode="decimal"
-            value={`${getCurrencySymbol(fiatCurrency.currencyCode)}${inputValue}`}
-            onChange={(e) => {
-              let value = e.target.value;
-              // Remove currency symbol from the start
-              const symbol = getCurrencySymbol(fiatCurrency.currencyCode);
-              if (value.startsWith(symbol)) {
-                value = value.slice(symbol.length);
-              }
-              handleInputChange(value);
-            }}
-            placeholder="Enter amount"
+            value={`$${displayValue}`}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            onClick={handleClick}
+            onSelect={handleSelect}
+            placeholder="$0.00"
             ref={inputRef}
             className="w-full bg-transparent border-none text-white focus:outline-none text-5xl font-bold text-center caret-white"
           />
         </div>
-
-        {/* Equivalent Crypto Amount Display with Inline Currency Selector */}
-        {inputValue && !error && (
-          <div className="mt-2 text-center">
-            <div className="flex items-center justify-center gap-1">
-              <span className="text-lg text-gray-300">≈ {equivalentCryptoAmount.split(' ')[0]}</span>
-              <div className="relative">
-                <select
-                  value={cryptoCurrency.currencyCode}
-                  onChange={handleCryptoChange}
-                  className="appearance-none bg-transparent border-none text-lg text-gray-300 focus:outline-none cursor-pointer pr-4"
-                  style={{ textAlignLast: 'center' }}
-                >
-                  {availableCryptos.map((crypto) => (
-                    <option 
-                      key={crypto.currencyCode} 
-                      value={crypto.currencyCode}
-                      className="bg-gray-800 text-white"
-                    >
-                      {crypto.symbol || crypto.currencyCode.replace('_BASE', '')}
-                    </option>
-                  ))}
-                </select>
-                <svg 
-                  className="absolute right-0 top-1/2 transform -translate-y-1/2 w-3 h-3 text-gray-400 pointer-events-none" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Error Message */}
         {error && (
@@ -232,28 +253,6 @@ export function SmartAmountInput({
           </div>
         )}
       </div>
-
-      {/* Preset Amounts */}
-      {limits && (
-        <div className="space-y-2 text-center">
-          <p className="text-sm text-gray-400">Quick amounts:</p>
-          <div className="flex gap-2 flex-wrap justify-center">
-            {getPresetAmounts(fiatCurrency.currencyCode)
-              .filter(amount => amount <= limits.maximumAmount)
-              .map((amount) => (
-                <button
-                  key={amount}
-                  type="button"
-                  onClick={() => handlePresetAmount(amount)}
-                  className="px-3 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-sm transition-colors"
-                >
-                  {getCurrencySymbol(fiatCurrency.currencyCode)}{amount}
-                </button>
-              ))}
-          </div>
-        </div>
-      )}
-
     </div>
   );
 }

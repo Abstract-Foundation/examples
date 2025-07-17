@@ -9,15 +9,18 @@ export function ConnectedState() {
 
   if (!address) return null;
 
+  // Trim wallet address for mobile display
+  const trimmedAddress = `${address.slice(0, 6)}...${address.slice(-4)}`;
+
   return (
     <div className="w-full max-w-4xl mx-auto">
       {/* Wallet Status Header */}
       <div className="bg-white/5 border border-white/10 rounded-lg p-4 mb-6 flex items-center justify-between">
         <div>
           <p className="text-sm font-medium font-[family-name:var(--font-roobert)] mb-1">
-            Connected to Abstract Global Wallet
+            Connected to wallet
           </p>
-          <p className="text-xs text-gray-400 font-mono">{address}</p>
+          <p className="text-xs text-gray-400 font-mono">{trimmedAddress}</p>
         </div>
         <button
           className="rounded-full border border-solid border-white/20 transition-colors flex items-center justify-center bg-white/10 text-white gap-2 hover:bg-white/20 hover:cursor-pointer text-sm px-4 font-[family-name:var(--font-roobert)] h-9"

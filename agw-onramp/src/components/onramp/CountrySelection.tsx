@@ -1,0 +1,96 @@
+import { useState, useEffect, useRef } from 'react';
+import { Country } from '@/services/onramp';
+import { CountryCard } from './CountryCard';
+
+interface CountrySelectionProps {
+  countries: Country[];
+  selectedCountry: Country | null;
+  onCountrySelect: (country: Country) => void;
+  onBack: () => void;
+}
+
+export function CountrySelection({
+  countries,
+  selectedCountry,
+  onCountrySelect,
+  onBack,
+}: CountrySelectionProps) {
+  const [searchTerm, setSearchTerm] = useState('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const filteredCountries = countries.filter(
+    (country) =>
+      country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      country.countryCode.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  useEffect(() => {
+    setTimeout(() => searchInputRef.current?.focus(), 100);
+  }, []);
+
+  function handleCountrySelect(country: Country) {
+    onCountrySelect(country);
+    onBack();
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <button
+          onClick={onBack}
+          className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-green-500/50 rounded p-1"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          <span>Back</span>
+        </button>
+        <h2 className="text-xl font-semibold text-white">
+          Select Country
+        </h2>
+        <div className="w-16" /> {/* Spacer for center alignment */}
+      </div>
+
+      {/* Search */}
+      <div className="relative">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+        <input
+          ref={searchInputRef}
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search countries..."
+          className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:border-green-500 focus:ring-1 focus:ring-green-500 focus:outline-none"
+        />
+      </div>
+
+      {/* Country List */}
+      <div className="max-h-96 overflow-y-auto">
+        {filteredCountries.length > 0 ? (
+          <div className="space-y-2">
+            {filteredCountries.map((country) => (
+              <CountryCard
+                key={country.countryCode}
+                country={country}
+                isSelected={selectedCountry?.countryCode === country.countryCode}
+                onClick={() => handleCountrySelect(country)}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="p-8 text-center">
+            <p className="text-gray-400">No countries found</p>
+            <p className="text-gray-500 text-sm mt-1">
+              Try adjusting your search terms
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
