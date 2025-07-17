@@ -16,8 +16,8 @@ import { PaymentMethodSelection } from './PaymentMethodSelection';
 import { PaymentProviderSelection } from './PaymentProviderSelection';
 import { useGeoLocation } from '@/hooks/useGeoLocation';
 import { getDefaultFiatAmount } from '@/utils/currencyUtils';
-import { getSmartPaymentMethod, getPaymentMethodDisplayName, getPaymentMethodIcon } from '@/utils/deviceDetection';
-import { getSmartDefaultPaymentRoute, getBestQuoteForRoute } from '@/utils/paymentRouteUtils';
+import { getSmartPaymentMethod } from '@/utils/deviceDetection';
+import { getSmartDefaultPaymentRoute } from '@/utils/paymentRouteUtils';
 
 
 // The flow has 8 main steps: loading setup, showing purchase form, crypto selection, country selection, currency selection, payment method selection, provider selection, and processing payment
@@ -572,7 +572,6 @@ export function QuickPurchaseFlow() {
             <div className="space-y-1">
               <SmartAmountInput
                 fiatCurrency={state.nativeFiatCurrency}
-                cryptoCurrency={state.selectedCryptoCurrency}
                 initialFiatAmount={state.fiatAmount}
                 limits={limits}
                 onAmountChange={handleAmountChange}

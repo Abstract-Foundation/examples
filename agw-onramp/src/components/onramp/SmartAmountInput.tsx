@@ -3,16 +3,13 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { type Currency } from '@/services/onramp';
 import { 
-  formatAmountInput, 
   formatFiatCurrency,
-  getCurrencySymbol,
   isValidAmount,
   parseAmount
 } from '@/utils/currencyUtils';
 
 interface SmartAmountInputProps {
   fiatCurrency: Currency; // The fiat currency the user will pay with (USD, EUR, etc.)
-  cryptoCurrency: Currency; // The crypto currency they'll receive (ETH, USDC, etc.)
   initialFiatAmount: number; // Starting amount to show in the input
   limits?: {
     currencyCode: string;
@@ -26,7 +23,6 @@ interface SmartAmountInputProps {
 
 export function SmartAmountInput({ 
   fiatCurrency, 
-  cryptoCurrency,
   initialFiatAmount,
   limits,
   onAmountChange,

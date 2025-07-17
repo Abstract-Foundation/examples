@@ -25,9 +25,9 @@ export function getSmartDefaultPaymentRoute(
   const smartPaymentMethod = getSmartPaymentMethod(paymentMethods);
   
   // 2. Filter quotes for that payment method
-  const relevantQuotes = quotes.filter(
-    q => q.paymentMethodType === smartPaymentMethod.paymentMethod
-  );
+  const relevantQuotes = smartPaymentMethod 
+    ? quotes.filter(q => q.paymentMethodType === smartPaymentMethod.paymentMethod)
+    : [];
   
   // If no quotes for smart payment method, fall back to any quotes
   const quotesToConsider = relevantQuotes.length > 0 ? relevantQuotes : quotes;
@@ -41,6 +41,10 @@ export function getSmartDefaultPaymentRoute(
   const actualPaymentMethod = paymentMethods.find(
     pm => pm.paymentMethod === bestQuote.paymentMethodType
   ) || smartPaymentMethod;
+
+  if (!actualPaymentMethod) {
+    return null;
+  }
 
   return {
     paymentMethod: actualPaymentMethod,
