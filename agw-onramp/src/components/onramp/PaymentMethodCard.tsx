@@ -9,8 +9,6 @@ interface PaymentMethodCardProps {
 }
 
 export function PaymentMethodCard({ paymentMethod, isSelected = false, onClick }: PaymentMethodCardProps) {
-
-  console.log(paymentMethod);
   return (
     <button
       onClick={onClick}
