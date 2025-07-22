@@ -9,18 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@privy-io/cross-app-connect": "^0.1.2",
-    "@abstract-foundation/agw-client": "^1.0.0",
-    "@abstract-foundation/agw-react": "^1.0.0",
-    "@rainbow-me/rainbowkit": "^2.1.7",
+    "@privy-io/cross-app-connect": "^0.2.1",
+    "@abstract-foundation/agw-client": "^1.8.6",
+    "@abstract-foundation/agw-react": "^1.8.7",
+    "@rainbow-me/rainbowkit": "^2.2.8",
     "@tanstack/react-query": "^5.56.2",
     "encoding": "^0.1.13",
     "next": "14.2.13",
     "pino-pretty": "^11.2.2",
     "react": "^18",
     "react-dom": "^18",
-    "viem": "^2.21.44",
-    "wagmi": "^2.12.29"
+    "viem": "^2.33.0",
+    "wagmi": "^2.16.0"
   },
   "devDependencies": {
     "@types/node": "^20",
