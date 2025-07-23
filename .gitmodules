@@ -1,0 +1,6 @@
+[submodule "crossmint/contracts/lib/forge-std"]
+	path = crossmint/contracts/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "crossmint/contracts/lib/openzeppelin-contracts"]
+	path = crossmint/contracts/lib/openzeppelin-contracts
+	url = https://github.com/openzeppelin/openzeppelin-contracts
