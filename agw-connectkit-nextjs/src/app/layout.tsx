@@ -1,8 +1,8 @@
+import "@rainbow-me/rainbowkit/styles.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import NextAbstractWalletProvider from "../components/NextAbstractWalletProvider";
+import NextAbstractWalletProvider from "../components/provider/NextAbstractWalletProvider";
 import "./globals.css";
-import "@rainbow-me/rainbowkit/styles.css";
 
 // Default Fonts from Next.js
 const geistSans = localFont({
