@@ -9,12 +9,17 @@ import { abstractWallet } from "@abstract-foundation/agw-react/connectors";
 import { abstractTestnet } from "wagmi/chains";
 import { createConfig, WagmiProvider } from "wagmi";
 import { http } from "viem";
+import { metaMaskWallet } from "@rainbow-me/rainbowkit/wallets";
 
 const connectors = connectorsForWallets(
   [
     {
       groupName: "Abstract",
       wallets: [abstractWallet],
+    },
+    {
+      groupName: "Metamask",
+      wallets: [metaMaskWallet],
     },
   ],
   {
