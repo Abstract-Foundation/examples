@@ -40,7 +40,7 @@ export default function Home() {
             <CreateSession onSessionCreated={handleSessionCreated} />
           )}
 
-          {sessionData && (
+          {status === "connected" && sessionData && (
             <MintNft
               sessionSigner={sessionData.sessionSigner}
               session={sessionData.session}
