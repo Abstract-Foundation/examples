@@ -5,7 +5,12 @@ import {
   useLoginWithAbstract,
   useWriteContractSponsored,
 } from "@abstract-foundation/agw-react";
-import { useAccount, useWaitForTransactionReceipt } from "wagmi";
+import {
+  useAccount,
+  useSignMessage,
+  useSignTypedData,
+  useWaitForTransactionReceipt,
+} from "wagmi";
 import { getGeneralPaymasterInput } from "viem/zksync";
 import { parseAbi } from "viem";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
@@ -13,6 +18,8 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 export default function Home() {
   const { logout } = useLoginWithAbstract();
   const { address, status } = useAccount();
+  const { signMessage } = useSignMessage();
+  const { signTypedData } = useSignTypedData();
   const { writeContractSponsored, data: transactionHash } =
     useWriteContractSponsored();
   const { data: transactionReceipt } = useWaitForTransactionReceipt({
@@ -135,6 +142,48 @@ export default function Home() {
                         />
                       </svg>
                       <span className="w-full text-center">Submit tx</span>
+                    </button>
+                    </div>
+                    <div className="flex gap-2 w-full">
+                    <button
+                      className="rounded-full border border-solid transition-colors flex items-center justify-center text-white gap-2 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] flex-1 w-[140px] bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent"
+                      onClick={() => {
+                        signMessage({
+                          message: "Hello, world!",
+                        });
+                      }}
+                    >
+                      Sign Message
+                    </button>
+                    <button
+                      className="rounded-full border border-solid transition-colors flex items-center justify-center text-white gap-2 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] flex-1 w-[140px] bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent"
+                      onClick={() => {
+                        signTypedData({
+                          domain: {
+                            name: "Abstract",
+                            version: "1",
+                          },
+                          types: {
+                            Message: [
+                              {
+                                name: "message",
+                                type: "string",
+                              },
+                              {
+                                name: "nonce",
+                                type: "uint256",
+                              },
+                            ],
+                          },
+                          primaryType: "Message",
+                          message: {
+                            message: "Hello, world!",
+                            nonce: BigInt(1),
+                          },
+                        });
+                      }}
+                    >
+                      Sign Typed Data
                     </button>
                   </div>
                   {!!transactionReceipt && (
