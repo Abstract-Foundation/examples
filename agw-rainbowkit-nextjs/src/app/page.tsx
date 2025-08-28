@@ -198,7 +198,10 @@ export default function Home() {
                           ]),
                           address: "0x3439153EB7AF838Ad19d56E1571FBD09333C2809",
                           functionName: "approve",
-                          args: ["0x000000000000000000000000000000000000dEaD", maxUint256],
+                          args: [
+                            "0x000000000000000000000000000000000000dEaD",
+                            maxUint256,
+                          ],
                         });
                       }}
                     >
@@ -213,11 +216,86 @@ export default function Home() {
                           ]),
                           address: "0xC4822AbB9F05646A9Ce44EFa6dDcda0Bf45595AA",
                           functionName: "setApprovalForAll",
-                          args: ["0x000000000000000000000000000000000000dEaD", true],
+                          args: [
+                            "0x000000000000000000000000000000000000dEaD",
+                            true,
+                          ],
                         });
                       }}
                     >
                       Infinite NFT approval
+                    </button>
+                  </div>
+                  <div className="flex gap-2 w-full">
+                    <button
+                      className="rounded-full border border-solid transition-colors flex items-center justify-center text-white gap-2 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] flex-1 w-[140px] bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent"
+                      onClick={() => {
+                        signTypedData({
+                          domain: {
+                            name: "abs.xyz",
+                            version: "1",
+                          },
+                          types: {
+                            RequestData: [
+                              {
+                                name: "discord",
+                                type: "bool",
+                              },
+                              {
+                                name: "email",
+                                type: "bool"
+                              },
+                              {
+                                name: 'twitter',
+                                type: 'bool'
+                              }
+                            ],
+                          },
+                          primaryType: "RequestData",
+                          message: {
+                            discord: true,
+                            email: false,
+                            twitter: true,
+                          },
+                        });
+                      }}
+                    >
+                      Request Socials
+                    </button>
+                    <button
+                      className="rounded-full border border-solid transition-colors flex items-center justify-center text-white gap-2 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] flex-1 w-[140px] bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent"
+                      onClick={() => {
+                        signTypedData({
+                          domain: {
+                            name: "abs.xyz",
+                            version: "1",
+                          },
+                          types: {
+                            RequestData: [
+                              {
+                                name: "discord",
+                                type: "bool",
+                              },
+                              {
+                                name: "email",
+                                type: "bool"
+                              },
+                              {
+                                name: 'twitter',
+                                type: 'bool'
+                              }
+                            ],
+                          },
+                          primaryType: "RequestData",
+                          message: {
+                            discord: false,
+                            email: true,
+                            twitter: false,
+                          },
+                        });
+                      }}
+                    >
+                      Request Email
                     </button>
                   </div>
                   {!!transactionReceipt && (
