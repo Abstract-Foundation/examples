@@ -5,7 +5,7 @@ import {
   connectorsForWallets,
   darkTheme,
 } from "@rainbow-me/rainbowkit";
-import { abstractWallet } from "@abstract-foundation/agw-react/connectors";
+import { toPrivyWallet } from "@privy-io/cross-app-connect/rainbow-kit";
 import { abstractTestnet } from "wagmi/chains";
 import { createConfig, WagmiProvider } from "wagmi";
 import { http } from "viem";
@@ -15,7 +15,13 @@ const connectors = connectorsForWallets(
   [
     {
       groupName: "Abstract",
-      wallets: [abstractWallet],
+      wallets: [
+        toPrivyWallet({
+          name: "Abstract",
+          iconUrl: "https://abstract-assets.abs.xyz/icons/dev.png",
+          id: "cm5r1jtdg078314b3g90kd8dk",
+        }),
+      ],
     },
     {
       groupName: "Metamask",
@@ -24,7 +30,7 @@ const connectors = connectorsForWallets(
   ],
   {
     appName: "Rainbowkit Test",
-    projectId: "",
+    projectId: "861d61139f07eb55ffc1c038a7fb34a1",
     appDescription: "",
     appIcon: "",
     appUrl: "",
