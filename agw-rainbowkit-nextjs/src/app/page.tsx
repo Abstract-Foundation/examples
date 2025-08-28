@@ -10,9 +10,10 @@ import {
   useSignMessage,
   useSignTypedData,
   useWaitForTransactionReceipt,
+  useWriteContract,
 } from "wagmi";
 import { getGeneralPaymasterInput } from "viem/zksync";
-import { parseAbi } from "viem";
+import { maxUint256, parseAbi } from "viem";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export default function Home() {
@@ -20,6 +21,7 @@ export default function Home() {
   const { address, status } = useAccount();
   const { signMessage } = useSignMessage();
   const { signTypedData } = useSignTypedData();
+  const { writeContract } = useWriteContract();
   const { writeContractSponsored, data: transactionHash } =
     useWriteContractSponsored();
   const { data: transactionReceipt } = useWaitForTransactionReceipt({
@@ -143,8 +145,8 @@ export default function Home() {
                       </svg>
                       <span className="w-full text-center">Submit tx</span>
                     </button>
-                    </div>
-                    <div className="flex gap-2 w-full">
+                  </div>
+                  <div className="flex gap-2 w-full">
                     <button
                       className="rounded-full border border-solid transition-colors flex items-center justify-center text-white gap-2 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] flex-1 w-[140px] bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent"
                       onClick={() => {
@@ -184,6 +186,38 @@ export default function Home() {
                       }}
                     >
                       Sign Typed Data
+                    </button>
+                  </div>
+                  <div className="flex gap-2 w-full">
+                    <button
+                      className="rounded-full border border-solid transition-colors flex items-center justify-center text-white gap-2 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] flex-1 w-[140px] bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent"
+                      onClick={() => {
+                        writeContract({
+                          abi: parseAbi([
+                            "function approve(address,uint256) external",
+                          ]),
+                          address: "0x3439153EB7AF838Ad19d56E1571FBD09333C2809",
+                          functionName: "approve",
+                          args: ["0x000000000000000000000000000000000000dEaD", maxUint256],
+                        });
+                      }}
+                    >
+                      Infinite ERC-20 approval
+                    </button>
+                    <button
+                      className="rounded-full border border-solid transition-colors flex items-center justify-center text-white gap-2 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] flex-1 w-[140px] bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent"
+                      onClick={() => {
+                        writeContract({
+                          abi: parseAbi([
+                            "function setApprovalForAll(address,bool) external",
+                          ]),
+                          address: "0xC4822AbB9F05646A9Ce44EFa6dDcda0Bf45595AA",
+                          functionName: "setApprovalForAll",
+                          args: ["0x000000000000000000000000000000000000dEaD", true],
+                        });
+                      }}
+                    >
+                      Infinite NFT approval
                     </button>
                   </div>
                   {!!transactionReceipt && (
