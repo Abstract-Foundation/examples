@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@privy-io/cross-app-connect": "^0.2.3",
+    "@privy-io/cross-app-connect": "^0.3.0",
     "@abstract-foundation/agw-client": "^1.8.6",
     "@abstract-foundation/agw-react": "^1.8.7",
     "@rainbow-me/rainbowkit": "^2.2.8",

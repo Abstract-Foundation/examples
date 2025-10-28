@@ -20,6 +20,7 @@ const connectors = connectorsForWallets(
           name: "Abstract",
           iconUrl: "https://abstract-assets.abs.xyz/icons/dev.png",
           id: "cm5r1jtdg078314b3g90kd8dk",
+          defaultPopupTimeout: 1000 * 60 * 30, // 30 minutes
         }),
       ],
     },
