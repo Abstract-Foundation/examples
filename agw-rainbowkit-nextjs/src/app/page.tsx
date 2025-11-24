@@ -11,22 +11,38 @@ import {
   useSignTypedData,
   useWaitForTransactionReceipt,
   useWriteContract,
+  useSendTransaction,
+  useSwitchChain,
 } from "wagmi";
 import { getGeneralPaymasterInput } from "viem/zksync";
-import { maxUint256, parseAbi } from "viem";
+import {
+  maxUint256,
+  parseAbi,
+  parseEther,
+  parseUnits,
+  zeroAddress,
+} from "viem";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export default function Home() {
   const { logout } = useLoginWithAbstract();
-  const { address, status } = useAccount();
+  const { address, status, chainId } = useAccount();
   const { signMessage } = useSignMessage();
   const { signTypedData } = useSignTypedData();
   const { writeContract } = useWriteContract();
+  const { sendTransaction } = useSendTransaction();
+  const { switchChain } = useSwitchChain();
   const { writeContractSponsored, data: transactionHash } =
     useWriteContractSponsored();
   const { data: transactionReceipt } = useWaitForTransactionReceipt({
     hash: transactionHash,
   });
+
+  // Test addresses and contracts
+  const testRecipient = "0xfE8f62b2ec3f6594499C94D02c7bE15394Ef53EE";
+  const testToken = "0x3439153EB7AF838Ad19d56E1571FBD09333C2809";
+  const testNFT = "0xC4822AbB9F05646A9Ce44EFa6dDcda0Bf45595AA";
+  const testSpender = "0x000000000000000000000000000000000000dEaD";
 
   return (
     <div className="relative grid grid-rows-[1fr_auto] min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-avenue-mono)] bg-black overflow-hidden">
@@ -65,253 +81,482 @@ export default function Home() {
             .
           </p>
 
-          <div className="flex justify-center">
+          <div className="flex justify-center w-full max-w-6xl">
             {status === "connected" ? (
-              <div className="bg-white/5 border border-white/10 rounded-lg p-6 shadow-lg backdrop-blur-sm max-w-sm w-full">
-                <div className="flex flex-col items-center gap-4">
-                  <div className="text-center">
-                    <p className="text-sm sm:text-base font-medium font-[family-name:var(--font-roobert)] mb-1">
-                      Connected to Abstract Global Wallet
+              <div className="bg-white/5 border border-white/10 rounded-lg p-6 shadow-lg backdrop-blur-sm w-full max-h-[80vh] overflow-y-auto">
+                <div className="flex flex-col gap-6">
+                  {/* Header */}
+                  <div className="text-center border-b border-white/10 pb-4">
+                    <p className="text-lg font-medium font-[family-name:var(--font-roobert)] mb-2">
+                      Cross-App Transaction Testing
                     </p>
-                    <p className="text-xs text-gray-400 font-mono">{address}</p>
-                    <p className="text-sm sm:text-base font-medium font-[family-name:var(--font-roobert)] mb-1">
+                    <p className="text-xs text-gray-400 font-mono mb-3">
+                      {address}
+                    </p>
+                    <div className="flex items-center justify-center gap-3">
                       <a
                         href={`https://explorer.testnet.abs.xyz/address/${address}`}
                         target="_blank"
                         rel="noopener noreferrer"
+                        className="text-xs text-green-400 hover:text-green-300 transition-colors font-[family-name:var(--font-roobert)]"
                       >
                         View on Explorer
                       </a>
-                    </p>
-                  </div>
-                  <div className="flex gap-2 w-full">
-                    <button
-                      className="rounded-full border border-solid border-white/20 transition-colors flex items-center justify-center bg-white/10 text-white gap-2 hover:bg-white/20 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] flex-1"
-                      onClick={logout}
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
+                      <span className="text-gray-600">|</span>
+                      <button
+                        className="text-xs text-red-400 hover:text-red-300 transition-colors font-[family-name:var(--font-roobert)] bg-transparent border-none cursor-pointer p-0"
+                        onClick={logout}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                        />
-                      </svg>
-                      Disconnect
-                    </button>
-                    <button
-                      className={`rounded-full border border-solid transition-colors flex items-center justify-center text-white gap-2 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] flex-1 w-[140px]
-                        ${
-                          !writeContractSponsored
-                            ? "bg-gray-500 cursor-not-allowed opacity-50"
-                            : "bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent"
-                        }`}
-                      onClick={() =>
-                        writeContractSponsored({
-                          abi: parseAbi([
-                            "function mint(address,uint256) external",
-                          ]),
-                          address: "0xC4822AbB9F05646A9Ce44EFa6dDcda0Bf45595AA",
-                          functionName: "mint",
-                          args: [address, BigInt(1)],
-                          paymaster:
-                            "0x5407B5040dec3D339A9247f3654E59EEccbb6391",
-                          paymasterInput: getGeneralPaymasterInput({
-                            innerInput: "0x",
-                          }),
-                        })
-                      }
-                      disabled={!writeContractSponsored}
-                    >
-                      <svg
-                        className="w-4 h-4 flex-shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
+                        Disconnect
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Transfer Transactions */}
+                  <div className="space-y-2">
+                    <h3 className="text-sm font-semibold text-green-400 font-[family-name:var(--font-roobert)]">
+                      Transfer Transactions
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <button
+                        className="rounded-lg border border-white/20 transition-colors flex items-center justify-center bg-white/10 text-white gap-2 hover:bg-white/20 text-xs h-10 px-4 font-[family-name:var(--font-roobert)]"
+                        onClick={() => {
+                          sendTransaction({
+                            to: testRecipient as `0x${string}`,
+                            value: parseEther("0.001"),
+                          });
+                        }}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M13 10V3L4 14h7v7l9-11h-7z"
-                        />
-                      </svg>
-                      <span className="w-full text-center">Submit tx</span>
-                    </button>
-                  </div>
-                  <div className="flex gap-2 w-full">
-                    <button
-                      className="rounded-full border border-solid transition-colors flex items-center justify-center text-white gap-2 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] flex-1 w-[140px] bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent"
-                      onClick={() => {
-                        signMessage({
-                          message: "Hello, world!",
-                        });
-                      }}
-                    >
-                      Sign Message
-                    </button>
-                    <button
-                      className="rounded-full border border-solid transition-colors flex items-center justify-center text-white gap-2 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] flex-1 w-[140px] bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent"
-                      onClick={() => {
-                        signTypedData({
-                          domain: {
-                            name: "Abstract",
-                            version: "1",
-                          },
-                          types: {
-                            Message: [
-                              {
-                                name: "message",
-                                type: "string",
-                              },
-                              {
-                                name: "nonce",
-                                type: "uint256",
-                              },
+                        💸 ETH Transfer (0.001 ETH)
+                      </button>
+                      <button
+                        className="rounded-lg border border-white/20 transition-colors flex items-center justify-center bg-white/10 text-white gap-2 hover:bg-white/20 text-xs h-10 px-4 font-[family-name:var(--font-roobert)]"
+                        onClick={() => {
+                          writeContract({
+                            abi: parseAbi([
+                              "function transfer(address,uint256) external returns (bool)",
+                            ]),
+                            address: testToken as `0x${string}`,
+                            functionName: "transfer",
+                            args: [
+                              testRecipient as `0x${string}`,
+                              parseUnits("100", 18),
                             ],
-                          },
-                          primaryType: "Message",
-                          message: {
-                            message: "Hello, world!",
-                            nonce: BigInt(1),
-                          },
-                        });
-                      }}
-                    >
-                      Sign Typed Data
-                    </button>
+                          });
+                        }}
+                      >
+                        🪙 Token Transfer (100 tokens)
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex gap-2 w-full">
-                    <button
-                      className="rounded-full border border-solid transition-colors flex items-center justify-center text-white gap-2 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] flex-1 w-[140px] bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent"
-                      onClick={() => {
-                        writeContract({
-                          abi: parseAbi([
-                            "function approve(address,uint256) external",
-                          ]),
-                          address: "0x3439153EB7AF838Ad19d56E1571FBD09333C2809",
-                          functionName: "approve",
-                          args: [
-                            "0x000000000000000000000000000000000000dEaD",
-                            maxUint256,
-                          ],
-                        });
-                      }}
-                    >
-                      Infinite ERC-20 approval
-                    </button>
-                    <button
-                      className="rounded-full border border-solid transition-colors flex items-center justify-center text-white gap-2 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] flex-1 w-[140px] bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent"
-                      onClick={() => {
-                        writeContract({
-                          abi: parseAbi([
-                            "function setApprovalForAll(address,bool) external",
-                          ]),
-                          address: "0xC4822AbB9F05646A9Ce44EFa6dDcda0Bf45595AA",
-                          functionName: "setApprovalForAll",
-                          args: [
-                            "0x000000000000000000000000000000000000dEaD",
-                            true,
-                          ],
-                        });
-                      }}
-                    >
-                      Infinite NFT approval
-                    </button>
-                  </div>
-                  <div className="flex gap-2 w-full">
-                    <button
-                      className="rounded-full border border-solid transition-colors flex items-center justify-center text-white gap-2 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] flex-1 w-[140px] bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent"
-                      onClick={() => {
-                        signTypedData({
-                          domain: {
-                            name: "abs.xyz",
-                            version: "1",
-                          },
-                          types: {
-                            RequestData: [
-                              {
-                                name: "discord",
-                                type: "bool",
-                              },
-                              {
-                                name: "email",
-                                type: "bool"
-                              },
-                              {
-                                name: 'twitter',
-                                type: 'bool'
-                              }
+
+                  {/* Token Approvals */}
+                  <div className="space-y-2">
+                    <h3 className="text-sm font-semibold text-yellow-400 font-[family-name:var(--font-roobert)]">
+                      Token Approvals
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <button
+                        className="rounded-lg border border-white/20 transition-colors flex items-center justify-center bg-white/10 text-white gap-2 hover:bg-white/20 text-xs h-10 px-4 font-[family-name:var(--font-roobert)]"
+                        onClick={() => {
+                          writeContract({
+                            abi: parseAbi([
+                              "function approve(address,uint256) external returns (bool)",
+                            ]),
+                            address: testToken as `0x${string}`,
+                            functionName: "approve",
+                            args: [testSpender as `0x${string}`, maxUint256],
+                          });
+                        }}
+                      >
+                        ✅ Infinite ERC-20 Approval
+                      </button>
+                      <button
+                        className="rounded-lg border border-white/20 transition-colors flex items-center justify-center bg-white/10 text-white gap-2 hover:bg-white/20 text-xs h-10 px-4 font-[family-name:var(--font-roobert)]"
+                        onClick={() => {
+                          writeContract({
+                            abi: parseAbi([
+                              "function approve(address,uint256) external returns (bool)",
+                            ]),
+                            address: testToken as `0x${string}`,
+                            functionName: "approve",
+                            args: [
+                              testSpender as `0x${string}`,
+                              BigInt(1000000),
                             ],
-                          },
-                          primaryType: "RequestData",
-                          message: {
-                            discord: true,
-                            email: false,
-                            twitter: true,
-                          },
-                        });
-                      }}
-                    >
-                      Request Socials
-                    </button>
-                    <button
-                      className="rounded-full border border-solid transition-colors flex items-center justify-center text-white gap-2 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] flex-1 w-[140px] bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent"
-                      onClick={() => {
-                        signTypedData({
-                          domain: {
-                            name: "abs.xyz",
-                            version: "1",
-                          },
-                          types: {
-                            RequestData: [
-                              {
-                                name: "discord",
-                                type: "bool",
-                              },
-                              {
-                                name: "email",
-                                type: "bool"
-                              },
-                              {
-                                name: 'twitter',
-                                type: 'bool'
-                              }
-                            ],
-                          },
-                          primaryType: "RequestData",
-                          message: {
-                            discord: false,
-                            email: true,
-                            twitter: false,
-                          },
-                        });
-                      }}
-                    >
-                      Request Email
-                    </button>
+                          });
+                        }}
+                      >
+                        ✅ Limited ERC-20 Approval (1M)
+                      </button>
+                      <button
+                        className="rounded-lg border border-white/20 transition-colors flex items-center justify-center bg-white/10 text-white gap-2 hover:bg-white/20 text-xs h-10 px-4 font-[family-name:var(--font-roobert)]"
+                        onClick={() => {
+                          writeContract({
+                            abi: parseAbi([
+                              "function approve(address,uint256) external returns (bool)",
+                            ]),
+                            address: testToken as `0x${string}`,
+                            functionName: "approve",
+                            args: [testSpender as `0x${string}`, BigInt(0)],
+                          });
+                        }}
+                      >
+                        ❌ Revoke ERC-20 Approval
+                      </button>
+                      <button
+                        className="rounded-lg border border-white/20 transition-colors flex items-center justify-center bg-white/10 text-white gap-2 hover:bg-white/20 text-xs h-10 px-4 font-[family-name:var(--font-roobert)]"
+                        onClick={() => {
+                          writeContract({
+                            abi: parseAbi([
+                              "function setApprovalForAll(address,bool) external",
+                            ]),
+                            address: testNFT as `0x${string}`,
+                            functionName: "setApprovalForAll",
+                            args: [testSpender as `0x${string}`, true],
+                          });
+                        }}
+                      >
+                        ✅ NFT Approval (setApprovalForAll)
+                      </button>
+                    </div>
                   </div>
+
+                  {/* NFT Transactions */}
+                  <div className="space-y-2">
+                    <h3 className="text-sm font-semibold text-purple-400 font-[family-name:var(--font-roobert)]">
+                      NFT Transactions
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <button
+                        className="rounded-lg border border-white/20 transition-colors flex items-center justify-center bg-white/10 text-white gap-2 hover:bg-white/20 text-xs h-10 px-4 font-[family-name:var(--font-roobert)]"
+                        onClick={() => {
+                          writeContract({
+                            abi: parseAbi([
+                              "function safeTransferFrom(address,address,uint256) external",
+                            ]),
+                            address: testNFT as `0x${string}`,
+                            functionName: "safeTransferFrom",
+                            args: [
+                              address!,
+                              testRecipient as `0x${string}`,
+                              BigInt(1),
+                            ],
+                          });
+                        }}
+                      >
+                        🖼️ NFT Transfer (Token ID: 1)
+                      </button>
+                      <button
+                        className="rounded-lg border border-white/20 transition-colors flex items-center justify-center bg-white/10 text-white gap-2 hover:bg-white/20 text-xs h-10 px-4 font-[family-name:var(--font-roobert)]"
+                        onClick={() => {
+                          writeContract({
+                            abi: parseAbi([
+                              "function safeBatchTransferFrom(address,address,uint256[],uint256[],bytes) external",
+                            ]),
+                            address: testNFT as `0x${string}`,
+                            functionName: "safeBatchTransferFrom",
+                            args: [
+                              address!,
+                              testRecipient as `0x${string}`,
+                              [BigInt(1), BigInt(2)],
+                              [BigInt(1), BigInt(1)],
+                              "0x",
+                            ],
+                          });
+                        }}
+                      >
+                        🖼️ Batch NFT Transfer
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Swap Transactions */}
+                  <div className="space-y-2">
+                    <h3 className="text-sm font-semibold text-blue-400 font-[family-name:var(--font-roobert)]">
+                      Swap Transactions
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <button
+                        className="rounded-lg border border-white/20 transition-colors flex items-center justify-center bg-white/10 text-white gap-2 hover:bg-white/20 text-xs h-10 px-4 font-[family-name:var(--font-roobert)]"
+                        onClick={() => {
+                          // Example swap: approve token then swap
+                          writeContract({
+                            abi: parseAbi([
+                              "function swapExactTokensForTokens(uint256,uint256,address[],address,uint256) external returns (uint256[])",
+                            ]),
+                            address:
+                              "0x0000000000000000000000000000000000000000" as `0x${string}`, // This will fail, simulating a swap
+                            functionName: "swapExactTokensForTokens",
+                            args: [
+                              parseUnits("100", 18),
+                              BigInt(0),
+                              [testToken, zeroAddress] as `0x${string}`[],
+                              address!,
+                              BigInt(Math.floor(Date.now() / 1000) + 3600),
+                            ],
+                          });
+                        }}
+                      >
+                        🔄 Token Swap (DEX Router)
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Message Signing */}
+                  <div className="space-y-2">
+                    <h3 className="text-sm font-semibold text-cyan-400 font-[family-name:var(--font-roobert)]">
+                      Message Signing
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <button
+                        className="rounded-lg border border-white/20 transition-colors flex items-center justify-center bg-white/10 text-white gap-2 hover:bg-white/20 text-xs h-10 px-4 font-[family-name:var(--font-roobert)]"
+                        onClick={() => {
+                          signMessage({
+                            message: "Hello, world! This is a test message.",
+                          });
+                        }}
+                      >
+                        ✍️ Sign Message
+                      </button>
+                      <button
+                        className="rounded-lg border border-white/20 transition-colors flex items-center justify-center bg-white/10 text-white gap-2 hover:bg-white/20 text-xs h-10 px-4 font-[family-name:var(--font-roobert)]"
+                        onClick={() => {
+                          signTypedData({
+                            domain: {
+                              name: "Abstract",
+                              version: "1",
+                              chainId: chainId || 11155111,
+                            },
+                            types: {
+                              Message: [
+                                {
+                                  name: "message",
+                                  type: "string",
+                                },
+                                {
+                                  name: "nonce",
+                                  type: "uint256",
+                                },
+                              ],
+                            },
+                            primaryType: "Message",
+                            message: {
+                              message: "Hello, world!",
+                              nonce: BigInt(1),
+                            },
+                          });
+                        }}
+                      >
+                        ✍️ Sign Typed Data (EIP-712)
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Info Requests */}
+                  <div className="space-y-2">
+                    <h3 className="text-sm font-semibold text-pink-400 font-[family-name:var(--font-roobert)]">
+                      Info Requests (abs.xyz)
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <button
+                        className="rounded-lg border border-white/20 transition-colors flex items-center justify-center bg-white/10 text-white gap-2 hover:bg-white/20 text-xs h-10 px-4 font-[family-name:var(--font-roobert)]"
+                        onClick={() => {
+                          signTypedData({
+                            domain: {
+                              name: "abs.xyz",
+                              version: "1",
+                            },
+                            types: {
+                              RequestData: [
+                                {
+                                  name: "discord",
+                                  type: "bool",
+                                },
+                                {
+                                  name: "email",
+                                  type: "bool",
+                                },
+                                {
+                                  name: "twitter",
+                                  type: "bool",
+                                },
+                              ],
+                            },
+                            primaryType: "RequestData",
+                            message: {
+                              discord: true,
+                              email: true,
+                              twitter: true,
+                            },
+                          });
+                        }}
+                      >
+                        📧 Request All Socials
+                      </button>
+                      <button
+                        className="rounded-lg border border-white/20 transition-colors flex items-center justify-center bg-white/10 text-white gap-2 hover:bg-white/20 text-xs h-10 px-4 font-[family-name:var(--font-roobert)]"
+                        onClick={() => {
+                          signTypedData({
+                            domain: {
+                              name: "abs.xyz",
+                              version: "1",
+                            },
+                            types: {
+                              RequestData: [
+                                {
+                                  name: "discord",
+                                  type: "bool",
+                                },
+                                {
+                                  name: "email",
+                                  type: "bool",
+                                },
+                                {
+                                  name: "twitter",
+                                  type: "bool",
+                                },
+                              ],
+                            },
+                            primaryType: "RequestData",
+                            message: {
+                              discord: false,
+                              email: true,
+                              twitter: false,
+                            },
+                          });
+                        }}
+                      >
+                        📧 Request Email Only
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Contract Interactions */}
+                  <div className="space-y-2">
+                    <h3 className="text-sm font-semibold text-orange-400 font-[family-name:var(--font-roobert)]">
+                      Contract Interactions
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <button
+                        className={`rounded-lg border border-solid transition-colors flex items-center justify-center text-white gap-2 text-xs h-10 px-4 font-[family-name:var(--font-roobert)]
+                          ${
+                            !writeContractSponsored
+                              ? "bg-gray-500 cursor-not-allowed opacity-50 border-white/20"
+                              : "bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent"
+                          }`}
+                        onClick={() =>
+                          writeContractSponsored({
+                            abi: parseAbi([
+                              "function mint(address,uint256) external",
+                            ]),
+                            address: testNFT as `0x${string}`,
+                            functionName: "mint",
+                            args: [address!, BigInt(1)],
+                            paymaster:
+                              "0x5407B5040dec3D339A9247f3654E59EEccbb6391",
+                            paymasterInput: getGeneralPaymasterInput({
+                              innerInput: "0x",
+                            }),
+                          })
+                        }
+                        disabled={!writeContractSponsored}
+                      >
+                        ⚡ Sponsored Contract Call
+                      </button>
+                      <button
+                        className="rounded-lg border border-white/20 transition-colors flex items-center justify-center bg-white/10 text-white gap-2 hover:bg-white/20 text-xs h-10 px-4 font-[family-name:var(--font-roobert)]"
+                        onClick={() => {
+                          writeContract({
+                            abi: parseAbi([
+                              "function transfer(address,uint256) external returns (bool)",
+                            ]),
+                            address: testToken as `0x${string}`,
+                            functionName: "transfer",
+                            args: [
+                              testRecipient as `0x${string}`,
+                              parseUnits("50", 18),
+                            ],
+                          });
+                        }}
+                      >
+                        🔧 Generic Contract Call
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Network & Error Cases */}
+                  <div className="space-y-2">
+                    <h3 className="text-sm font-semibold text-red-400 font-[family-name:var(--font-roobert)]">
+                      Network & Error Cases
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <button
+                        className="rounded-lg border border-white/20 transition-colors flex items-center justify-center bg-white/10 text-white gap-2 hover:bg-white/20 text-xs h-10 px-4 font-[family-name:var(--font-roobert)]"
+                        onClick={() => {
+                          // Try to switch to a different chain (this will likely fail or prompt)
+                          if (switchChain) {
+                            switchChain({ chainId: 1 }); // Ethereum mainnet
+                          }
+                        }}
+                      >
+                        🔀 Network Switch Request
+                      </button>
+                      <button
+                        className="rounded-lg border border-white/20 transition-colors flex items-center justify-center bg-white/10 text-white gap-2 hover:bg-white/20 text-xs h-10 px-4 font-[family-name:var(--font-roobert)]"
+                        onClick={() => {
+                          // Intentionally bad transaction that will fail simulation
+                          writeContract({
+                            abi: parseAbi([
+                              "function transfer(address,uint256) external returns (bool)",
+                            ]),
+                            address: zeroAddress, // Invalid address
+                            functionName: "transfer",
+                            args: [
+                              testRecipient as `0x${string}`,
+                              parseUnits("100", 18),
+                            ],
+                          });
+                        }}
+                      >
+                        ⚠️ Simulation Failed (Invalid Address)
+                      </button>
+                      <button
+                        className="rounded-lg border border-white/20 transition-colors flex items-center justify-center bg-white/10 text-white gap-2 hover:bg-white/20 text-xs h-10 px-4 font-[family-name:var(--font-roobert)]"
+                        onClick={() => {
+                          // Transaction that will fail due to insufficient balance
+                          sendTransaction({
+                            to: testRecipient as `0x${string}`,
+                            value: parseEther("1000000"), // Way too much ETH
+                          });
+                        }}
+                      >
+                        ❌ Failed Transaction (Insufficient Balance)
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Transaction Status */}
                   {!!transactionReceipt && (
-                    <a
-                      href={`https://explorer.testnet.abs.xyz/tx/${transactionReceipt?.transactionHash}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <p className="text-sm sm:text-base font-medium font-[family-name:var(--font-roobert)] mb-1">
-                        Transaction Status: {transactionReceipt?.status}
-                      </p>
-                      <p className="text-xs text-gray-400 font-mono">
-                        {transactionReceipt?.transactionHash?.slice(0, 8)}...
-                        {transactionReceipt?.transactionHash?.slice(-6)}
-                      </p>
-                    </a>
+                    <div className="border-t border-white/10 pt-4">
+                      <a
+                        href={`https://explorer.testnet.abs.xyz/tx/${transactionReceipt?.transactionHash}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block text-center"
+                      >
+                        <p className="text-sm font-medium font-[family-name:var(--font-roobert)] mb-1">
+                          Last Transaction Status:{" "}
+                          {transactionReceipt?.status === "success"
+                            ? "✅ Success"
+                            : "❌ Failed"}
+                        </p>
+                        <p className="text-xs text-gray-400 font-mono">
+                          {transactionReceipt?.transactionHash?.slice(0, 10)}...
+                          {transactionReceipt?.transactionHash?.slice(-8)}
+                        </p>
+                      </a>
+                    </div>
                   )}
                 </div>
               </div>
