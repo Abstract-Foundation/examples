@@ -14,9 +14,9 @@
     "@crossmint/client-sdk-react-ui": "^2.2.19",
     "@privy-io/cross-app-connect": "^0.2.1",
     "@tanstack/react-query": "^5.71.5",
-    "next": "15.2.4",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "next": "15.4.8",
+    "react": "^19.0.1",
+    "react-dom": "^19.0.1",
     "viem": "^2.33.0",
     "wagmi": "^2.16.0"
   },
@@ -27,7 +27,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.2.4",
+    "eslint-config-next": "15.4.8",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
