@@ -22,7 +22,7 @@
     "clsx": "^2.1.1",
     "iron-session": "^8.0.4",
     "lucide-react": "^0.479.0",
-    "next": "15.2.6",
+    "next": "15.4.10",
     "next-themes": "^0.4.5",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
@@ -46,5 +46,6 @@
     "prettier-plugin-sort-imports": "^1.8.6",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "pnpm@10.24.0+sha512.01ff8ae71b4419903b65c60fb2dc9d34cf8bb6e06d03bde112ef38f7a34d6904c424ba66bea5cdcf12890230bf39f9580473140ed9c946fef328b6e5238a345a"
 }

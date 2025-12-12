@@ -18,8 +18,8 @@ importers:
         specifier: ^5.71.5
         version: 5.71.5(react@19.1.0)
       next:
-        specifier: 15.4.8
-        version: 15.4.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: 15.4.10
+        version: 15.4.10(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react:
         specifier: ^19.0.1
         version: 19.1.0
@@ -579,8 +579,8 @@ packages:
   '@napi-rs/wasm-runtime@0.2.8':
     resolution: {integrity: sha512-OBlgKdX7gin7OIq4fadsjpg+cp2ZphvAIKucHsNfTdJiqdOmOEwQd/bHi0VwNrcw5xpBJyUw6cK/QilCqy1BSg==}
 
-  '@next/env@15.4.8':
-    resolution: {integrity: sha512-LydLa2MDI1NMrOFSkO54mTc8iIHSttj6R6dthITky9ylXV2gCGi0bHQjVCtLGRshdRPjyh2kXbxJukDtBWQZtQ==}
+  '@next/env@15.4.10':
+    resolution: {integrity: sha512-knhmoJ0Vv7VRf6pZEPSnciUG1S4bIhWx+qTYBW/AjxEtlzsiNORPk8sFDCEvqLfmKuey56UB9FL1UdHEV3uBrg==}
 
   '@next/eslint-plugin-next@15.4.8':
     resolution: {integrity: sha512-KYz0o9fUk2SRgxEZCWJbV3TfZ4Zxt7lAhuZ1rsHG1A9tMqTz40Zg2lHi3qtrFJ4Nw8ya6z0oR77zQiWDFo0EGg==}
@@ -1608,10 +1608,6 @@ packages:
   detect-browser@5.3.0:
     resolution: {integrity: sha512-53rsFbGdwMwlF7qvCt0ypLM5V5/Mbl0szB7GPN8y9NCcbknYOeVVXdrXEq+90IwAfrrzt6Hd+u2E2ntakICU8w==}
 
-  detect-libc@2.0.3:
-    resolution: {integrity: sha512-bwy0MGW55bG41VqxxypOsdSdGqLwXPI/focwgTYCFMbdUiBAxLg9CFzG08sz2aqzknwiX7Hkl0bQENjg8iLByw==}
-    engines: {node: '>=8'}
-
   detect-libc@2.1.2:
     resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
     engines: {node: '>=8'}
@@ -2466,8 +2462,8 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
-  next@15.4.8:
-    resolution: {integrity: sha512-jwOXTz/bo0Pvlf20FSb6VXVeWRssA2vbvq9SdrOPEg9x8E1B27C2rQtvriAn600o9hH61kjrVRexEffv3JybuA==}
+  next@15.4.10:
+    resolution: {integrity: sha512-itVlc79QjpKMFMRhP+kbGKaSG/gZM6RCvwhEbwmCNF06CdDiNaoHcbeg0PqkEa2GOcn8KJ0nnc7+yL7EjoYLHQ==}
     engines: {node: ^18.18.0 || ^19.8.0 || >= 20.0.0}
     hasBin: true
     peerDependencies:
@@ -4102,7 +4098,7 @@ snapshots:
       '@types/debug': 4.1.12
       debug: 4.4.0
       pony-cause: 2.1.11
-      semver: 7.7.1
+      semver: 7.7.3
       uuid: 9.0.1
     transitivePeerDependencies:
       - supports-color
@@ -4116,7 +4112,7 @@ snapshots:
       '@types/debug': 4.1.12
       debug: 4.4.0
       pony-cause: 2.1.11
-      semver: 7.7.1
+      semver: 7.7.3
       uuid: 9.0.1
     transitivePeerDependencies:
       - supports-color
@@ -4173,7 +4169,7 @@ snapshots:
       '@tybys/wasm-util': 0.9.0
     optional: true
 
-  '@next/env@15.4.8': {}
+  '@next/env@15.4.10': {}
 
   '@next/eslint-plugin-next@15.4.8':
     dependencies:
@@ -5597,10 +5593,7 @@ snapshots:
 
   detect-browser@5.3.0: {}
 
-  detect-libc@2.0.3: {}
-
-  detect-libc@2.1.2:
-    optional: true
+  detect-libc@2.1.2: {}
 
   dijkstrajs@1.0.3: {}
 
@@ -6521,7 +6514,7 @@ snapshots:
 
   lightningcss@1.29.2:
     dependencies:
-      detect-libc: 2.0.3
+      detect-libc: 2.1.2
     optionalDependencies:
       lightningcss-darwin-arm64: 1.29.2
       lightningcss-darwin-x64: 1.29.2
@@ -6620,9 +6613,9 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  next@15.4.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+  next@15.4.10(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
-      '@next/env': 15.4.8
+      '@next/env': 15.4.10
       '@swc/helpers': 0.5.15
       caniuse-lite: 1.0.30001709
       postcss: 8.4.31
