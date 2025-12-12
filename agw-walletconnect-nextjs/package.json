@@ -13,7 +13,7 @@
     "@reown/appkit-adapter-wagmi": "^1.7.2",
     "@tanstack/react-query": "^5.74.0",
     "@wagmi/core": "^2.16.7",
-    "next": "15.3.6",
+    "next": "15.3.8",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
     "viem": "^2.26.3",
@@ -29,5 +29,6 @@
     "eslint-config-next": "15.3.0",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "pnpm@10.24.0+sha512.01ff8ae71b4419903b65c60fb2dc9d34cf8bb6e06d03bde112ef38f7a34d6904c424ba66bea5cdcf12890230bf39f9580473140ed9c946fef328b6e5238a345a"
 }

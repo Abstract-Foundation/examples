@@ -14,7 +14,7 @@
     "@crossmint/client-sdk-react-ui": "^2.2.19",
     "@privy-io/cross-app-connect": "^0.2.1",
     "@tanstack/react-query": "^5.71.5",
-    "next": "15.4.8",
+    "next": "15.4.10",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
     "viem": "^2.33.0",

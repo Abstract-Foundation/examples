@@ -12,7 +12,7 @@
     "@abstract-foundation/agw-client": "latest",
     "@abstract-foundation/agw-react": "latest",
     "@tanstack/react-query": "^5.71.5",
-    "next": "15.4.8",
+    "next": "15.4.10",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
     "viem": "^2.25.0",
@@ -28,5 +28,6 @@
     "eslint-config-next": "15.4.8",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "pnpm@10.24.0+sha512.01ff8ae71b4419903b65c60fb2dc9d34cf8bb6e06d03bde112ef38f7a34d6904c424ba66bea5cdcf12890230bf39f9580473140ed9c946fef328b6e5238a345a"
 }

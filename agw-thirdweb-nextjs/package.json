@@ -13,7 +13,7 @@
     "@abstract-foundation/agw-react": "^1.6.2",
     "@abstract-foundation/agw-client": "^1.6.2",
     "encoding": "^0.1.13",
-    "next": "14.2.13",
+    "next": "14.2.35",
     "pino-pretty": "^11.2.2",
     "react": "^18",
     "react-dom": "^18",
@@ -30,5 +30,6 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "pnpm@10.24.0+sha512.01ff8ae71b4419903b65c60fb2dc9d34cf8bb6e06d03bde112ef38f7a34d6904c424ba66bea5cdcf12890230bf39f9580473140ed9c946fef328b6e5238a345a"
 }
